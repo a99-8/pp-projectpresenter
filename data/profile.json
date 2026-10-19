@@ -1,0 +1,77 @@
+{
+  "name": "عبدالله",
+  "role": "مطوّر برمجيات Full-Stack",
+  "bio": "مطوّر أبني منتجات رقمية من الفكرة حتى الإطلاق. أهتم بتجربة المستخدم النظيفة، والمعمارية الواضحة، والكود القابل للصيانة. أعمل حالياً على تطبيقات ويب وجوال وإضافات متصفح.",
+  "location": "السعودية",
+  "availability": "متاح لمشاريع جديدة",
+  "email": "hello@example.com",
+  "socials": [
+    { "label": "GitHub", "url": "https://github.com/username", "icon": "github" },
+    { "label": "LinkedIn", "url": "https://linkedin.com/in/username", "icon": "linkedin" },
+    { "label": "X", "url": "https://x.com/username", "icon": "x" },
+    { "label": "البريد", "url": "mailto:hello@example.com", "icon": "mail" }
+  ],
+  "skills": [
+    {
+      "group": "الواجهات",
+      "items": [
+        { "name": "Next.js" },
+        { "name": "React" },
+        { "name": "TypeScript" },
+        { "name": "Tailwind CSS" }
+      ]
+    },
+    {
+      "group": "الخلفية والبيانات",
+      "items": [
+        { "name": "Node.js" },
+        { "name": "PostgreSQL" },
+        { "name": "Redis" },
+        { "name": "GraphQL" }
+      ]
+    },
+    {
+      "group": "الجوال",
+      "items": [
+        { "name": "Flutter" },
+        { "name": "Dart" },
+        { "name": "React Native" }
+      ]
+    },
+    {
+      "group": "الأدوات والبنية",
+      "items": [
+        { "name": "Docker" },
+        { "name": "Firebase" },
+        { "name": "Supabase" },
+        { "name": "Git" }
+      ]
+    }
+  ],
+  "timeline": [
+    {
+      "year": "2019",
+      "title": "بداية الرحلة",
+      "description": "أول سطور البرمجة: تعلمت أساسيات الويب وبدأت ببناء صفحات صغيرة لحل مشاكل يومية.",
+      "icon": "graduation"
+    },
+    {
+      "year": "2021",
+      "title": "أول مشروع حقيقي",
+      "description": "أطلقت أول تطبيق مستخدم فعلياً، وتعلمت درساً مهماً: الشيفرة سهلة، والمنتج الصالح هو التحدي.",
+      "icon": "rocket"
+    },
+    {
+      "year": "2023",
+      "title": "العمل الحر والمنتجات",
+      "description": "انتقلت لبناء منتجات كاملة للعملاء: واجهات، واجهات برمجية، وبنية تحتية — من التصميم حتى النشر.",
+      "icon": "briefcase"
+    },
+    {
+      "year": "2025",
+      "title": "الآن",
+      "description": "أركّز على أدوات المطورين وتجارب المستخدم التفاعلية، وأوثّق أعمالي هنا في PP.",
+      "icon": "sparkles"
+    }
+  ]
+}

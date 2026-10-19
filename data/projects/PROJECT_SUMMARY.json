@@ -1,0 +1,159 @@
+{
+  "slug": "planner3",
+  "name": "مقيم المخططات",
+  "tagline": "نظام محلي لتحليل بيانات الأراضي ودراسات المقارنة والتقييم المالي",
+  "description": "تطبيق ويب تفاعلي مبني بـ Next.js لإدارة مشاريع تقييم العقارات والأراضي. يتيح للمستخدم رفع بيانات الأراضي من ملفات CSV، إعداد جداول المقارنات، بناء مصفوفات التسويات، وإجراء التقييم النهائي مع تصدير النتائج إلى Excel/PDF. جميع البيانات تُحفظ محلياً في المتصفح عبر IndexedDB دون الحاجة إلى خادم خلفي.",
+  "source": "closed",
+  "type": "web",
+  "framework": {
+    "name": "Next.js"
+  },
+  "stack": [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "Dexie",
+    "IndexedDB",
+    "PapaParse",
+    "ExcelJS",
+    "mathjs",
+    "Zustand",
+    "Zod",
+    "Radix UI",
+    "shadcn/ui",
+    "Lucide React"
+  ],
+  "storage": "local",
+  "status": "active",
+  "year": 2026,
+  "features": [
+    "رفع بيانات الأراضي عبر ملفات CSV وتحويلها إلى جدول تفاعلي",
+    "إدارة مشاريع متعددة مع حفظ/حذف/إعادة تسمية في قاعدة بيانات محلية",
+    "دعم أنواع استخدامات متعددة داخل نفس المشروع (سكني، تجاري، إلخ)",
+    "لوحة تحكم لاختيار أعمدة التسويات والمجموعات والاعتماديات والزيادات",
+    "جدول مقارنات ديناميكي مع أعمدة ظروف السوق والتمويل المحسوبة",
+    "مصفوفات تسوية تفاعلية مع تحكم في المجموعات والقفزات والتوزيع",
+    "جدول تقييم نهائي يحسب السعر بعد التسويات والمرجح الموزون",
+    "تصدير كامل النظام أو المشروع إلى Excel بألوان قابلة للتخصيص",
+    "صفحة طباعة مخصصة لإخراج PDF بتنسيق نظيف",
+    "نظام تسجيل دخول بسيط محمي بكوكي httpOnly و SHA-256",
+    "إعدادات الألوان والحدود للطباعة والتصدير"
+  ],
+  "highlights": [
+    "يعمل كلياً على المتصفح بدون خادم، مما يحافظ على خصوصية البيانات",
+    "واجهة عربية RTL مع تجربة مستخدم شبيهة بـ shadcn/ui",
+    "بنية قابلة للتوسع بفصل المنطق في hooks وخدمات Dexie",
+    "دعم استيراد/تصدير المشاريع بنسخ احتياطية JSON",
+    "حسابات مالية دقيقة باستخدام mathjs مع تقريب قابل للضبط"
+  ],
+  "challenges": [
+    {
+      "title": "حسابات التسويات المعقدة",
+      "problem": "كل عمود تسوية يتطلب إعدادات مختلفة للمجموعات والقفزات، ويجب أن تنعكس تلقائياً على جدول التقييم النهائي.",
+      "solution": "فصل المنطق الحسابي في ملفات منفصلة (logic.ts, op.ts) واستخدام hooks مخصصة لكل قسم مع تحديثات متزامنة عبر Dexie."
+    },
+    {
+      "title": "تصدير Excel بتنسيق عربي RTL",
+      "problem": "يجب عرض الجداول بالعربية والاتجاه من اليمين لليسار مع الحفاظ على الألوان والحدود المخصصة.",
+      "solution": "استخدام ExcelJS مع تفعيل rightToLeft على الأوراق وتخصيص ألوان الخلايا والحدود بناءً على إعدادات المستخدم."
+    },
+    {
+      "title": "إدارة حالات البيانات المتعددة",
+      "problem": "المشروع يمر بعدة مراحل (رفع، تحكم، مقارنات، مصفوفات، تقييم) وكلها تعتمد على نفس البيانات.",
+      "solution": "تصميم ProjectSection متجانس يجمع الأقسام الخمسة، واستخدام Immer لتحديثات آمنة ومتوقعة."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "الواجهة الأمامية",
+        "nodes": [
+          {
+            "id": "ui",
+            "label": "مكونات Next.js/React",
+            "description": "صفحات App Router، مكونات shadcn/ui، وتنسيق Tailwind RTL",
+            "icon": "web"
+          },
+          {
+            "id": "state",
+            "label": "Hooks مخصصة",
+            "description": "useProjectMain, useSections — إدارة الحالة والتفاعل",
+            "icon": "react"
+          }
+        ]
+      },
+      {
+        "title": "المنطق والخدمات",
+        "nodes": [
+          {
+            "id": "logic",
+            "label": "logic.ts / op.ts",
+            "description": "الدوال الحسابية للتسويات والتقييم والمصفوفات",
+            "icon": "calculator"
+          },
+          {
+            "id": "service",
+            "label": "projectService",
+            "description": "CRUD للمشاريع وعمليات النسخ الاحتياطي",
+            "icon": "server"
+          }
+        ]
+      },
+      {
+        "title": "التخزين المحلي",
+        "nodes": [
+          {
+            "id": "db",
+            "label": "Dexie + IndexedDB",
+            "description": "قاعدة بيانات NoSQL داخل المتصفح",
+            "icon": "database"
+          },
+          {
+            "id": "export",
+            "label": "ExcelJS / JSON",
+            "description": "تصدير النتائج والنسخ الاحتياطية",
+            "icon": "file"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      { "from": "ui", "to": "state", "label": "أحداث المستخدم" },
+      { "from": "state", "to": "service", "label": "تحديث البيانات" },
+      { "from": "service", "to": "db", "label": "حفظ/قراءة" },
+      { "from": "state", "to": "logic", "label": "حسابات التقييم" },
+      { "from": "logic", "to": "ui", "label": "عرض النتائج" },
+      { "from": "service", "to": "export", "label": "تصدير" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "home",
+      "title": "قائمة المشاريع",
+      "device": "desktop",
+      "description": "الصفحة الرئيسية تعرض المشاريع المحفوظة مع إمكانية إنشاء مشروع جديد أو حذف الكل.",
+      "content": {
+        "type": "html",
+        "html": "<div style='font-family:system-ui;direction:rtl;padding:24px;background:#f8fafc;min-height:320px;'><div style='max-width:900px;margin:0 auto;background:white;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,.1);padding:24px;'><h2 style='font-size:18px;font-weight:700;margin-bottom:16px;border-bottom:1px solid #e2e8f0;padding-bottom:12px;'>المشاريع المحفوظة (3)</h2><div style='display:flex;flex-direction:column;gap:12px;'><div style='display:flex;justify-content:space-between;align-items:center;padding:14px;border:1px solid #e2e8f0;border-radius:12px;'><span style='font-weight:600;'>مشروع شمال الرياض</span><span style='color:#64748b;font-size:13px;'>آخر تحديث: 19/10/2026</span></div><div style='display:flex;justify-content:space-between;align-items:center;padding:14px;border:1px solid #e2e8f0;border-radius:12px;'><span style='font-weight:600;'>مشروع وسط المدينة</span><span style='color:#64748b;font-size:13px;'>آخر تحديث: 18/10/2026</span></div></div></div></div>"
+      }
+    },
+    {
+      "id": "project",
+      "title": "صفحة المشروع",
+      "device": "desktop",
+      "description": "تجمع بين جدول الأراضي، لوحة التحكم، جداول المقارنات، مصفوفات التسويات، والتقييم النهائي.",
+      "content": {
+        "type": "html",
+        "html": "<div style='font-family:system-ui;direction:rtl;padding:24px;background:#f8fafc;min-height:320px;'><div style='max-width:1000px;margin:0 auto;background:white;border-radius:16px;box-shadow:0 1px 3px rgba(0,0,0,.1);padding:24px;'><h1 style='font-size:22px;font-weight:800;margin-bottom:8px;'>مشروع شمال الرياض</h1><div style='color:#64748b;font-size:13px;margin-bottom:20px;'>معرف المشروع: <span style='font-family:monospace;background:#f1f5f9;padding:2px 6px;border-radius:4px;'>a1b2c3d4</span></div><div style='display:flex;gap:8px;margin-bottom:20px;'><button style='background:#2563eb;color:white;border:0;padding:8px 16px;border-radius:8px;font-size:13px;'>تحميل إكسل</button><button style='background:#0f172a;color:white;border:0;padding:8px 16px;border-radius:8px;font-size:13px;'>طباعة PDF</button></div><div style='border:1px solid #e2e8f0;border-radius:12px;padding:16px;'><h3 style='font-size:16px;font-weight:700;margin-bottom:12px;'>جدول الأراضي</h3><table style='width:100%;font-size:13px;border-collapse:collapse;'><thead style='background:#f1f5f9;'><tr><th style='padding:8px;border:1px solid #e2e8f0;'>رقم القطعة</th><th style='padding:8px;border:1px solid #e2e8f0;'>عرض الشارع</th><th style='padding:8px;border:1px solid #e2e8f0;'>السعر</th></tr></thead><tbody><tr><td style='padding:8px;border:1px solid #e2e8f0;text-align:center;'>101</td><td style='padding:8px;border:1px solid #e2e8f0;text-align:center;'>20</td><td style='padding:8px;border:1px solid #e2e8f0;text-align:center;'>1,500</td></tr></tbody></table></div></div></div>"
+      },
+      "links": [
+        {
+          "label": "قائمة المشاريع",
+          "target": "home",
+          "hotspot": { "x": 5, "y": 5, "w": 15, "h": 8 }
+        }
+      ]
+    }
+  ]
+}
