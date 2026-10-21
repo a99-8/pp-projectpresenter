@@ -2,16 +2,14 @@
 
 import DOMPurify from "dompurify";
 import {
-  ArrowLeft,
   Code2,
   Globe,
   Image as ImageIcon,
   Monitor,
-  MousePointerClick,
   Smartphone,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import type { DeviceKind, ViewerScreen } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -36,13 +34,26 @@ function buildSrcDoc(html: string) {
 }
 
 function ScreenContent({ screen }: { screen: ViewerScreen }) {
+  // DOMPurify يعمل في المتصفح فقط؛ نؤجّل العرض حتى ما بعد الـ hydration ليتطابق
+  // ناتج التطهير على الخادم والعميل ولا يحدث hydration mismatch في srcDoc.
+  const mounted = useSyncExternalStore(
+    () => () => {},
+    () => true,
+    () => false,
+  );
   const srcDoc = useMemo(
-    () => (screen.kind === "html" && screen.html ? buildSrcDoc(screen.html) : null),
-    [screen],
+    () =>
+      mounted && screen.kind === "html" && screen.html
+        ? buildSrcDoc(screen.html)
+        : null,
+    [mounted, screen],
   );
 
   switch (screen.kind) {
     case "html":
+      if (!mounted) {
+        return <div className="absolute inset-0 size-full bg-white" />;
+      }
       return (
         <iframe
           title={screen.title}
@@ -92,7 +103,6 @@ function MobileFrame({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative mx-auto w-full max-w-[290px]">
       <div className="relative aspect-[9/19.2] overflow-hidden rounded-[2.4rem] border-[9px] border-zinc-800 bg-black shadow-2xl ring-1 ring-border">
-        <div className="absolute top-2 left-1/2 z-20 h-5 w-20 -translate-x-1/2 rounded-full bg-zinc-800" />
         <div className="absolute inset-0">{children}</div>
       </div>
     </div>
@@ -126,16 +136,28 @@ function DesktopFrame({
   );
 }
 
-export function SmartViewer({ screens }: { screens: ViewerScreen[] }) {
+export function SmartViewer({
+  screens,
+  devicePicker = true,
+  fixedDevice,
+}: {
+  screens: ViewerScreen[];
+  /** إظهار زرّي التبديل بين سطح المكتب والجوال */
+  devicePicker?: boolean;
+  /** تثبيت الجهاز على قيمة محددة وإخفاء المبدّل */
+  fixedDevice?: DeviceKind;
+}) {
   const [activeId, setActiveId] = useState(screens[0]?.id ?? "");
   const active = screens.find((s) => s.id === activeId) ?? screens[0];
-  const [device, setDevice] = useState<DeviceKind>(active?.device ?? "desktop");
+  const [deviceOverride, setDeviceOverride] = useState<DeviceKind | null>(null);
+
+  const device = fixedDevice ?? deviceOverride ?? active?.device ?? "desktop";
 
   if (!active) return null;
 
   const select = (screen: ViewerScreen) => {
     setActiveId(screen.id);
-    setDevice(screen.device);
+    setDeviceOverride(null);
   };
 
   return (
@@ -166,29 +188,6 @@ export function SmartViewer({ screens }: { screens: ViewerScreen[] }) {
           })}
         </div>
 
-        {active.links.length > 0 && (
-          <div className="space-y-2 pt-2">
-            <p className="flex items-center gap-1.5 text-xs font-bold text-muted-foreground">
-              <MousePointerClick className="size-3.5" />
-              تنقّل داخل الشاشة
-            </p>
-            {active.links.map((link) => (
-              <button
-                key={`${link.target}-${link.label}`}
-                type="button"
-                onClick={() => {
-                  const target = screens.find((s) => s.id === link.target);
-                  if (target) select(target);
-                }}
-                className="flex w-full items-center justify-between rounded-lg border border-dashed border-primary/40 bg-primary/5 px-3 py-2 text-xs font-medium text-primary transition-colors hover:bg-primary/10"
-              >
-                {link.label}
-                <ArrowLeft className="size-3.5" />
-              </button>
-            ))}
-          </div>
-        )}
-
         {active.description && (
           <p className="pt-2 text-xs leading-relaxed text-muted-foreground">
             {active.description}
@@ -199,16 +198,17 @@ export function SmartViewer({ screens }: { screens: ViewerScreen[] }) {
       {/* إطار الجهاز */}
       <div className="order-1 lg:order-2">
         <div className="mb-4 flex items-center justify-center gap-2">
-          {(
-            [
-              { value: "desktop", label: "سطح مكتب", icon: Monitor },
-              { value: "mobile", label: "جوال", icon: Smartphone },
-            ] as const
-          ).map((opt) => (
+          {devicePicker &&
+            (
+              [
+                { value: "desktop", label: "سطح مكتب", icon: Monitor },
+                { value: "mobile", label: "جوال", icon: Smartphone },
+              ] as const
+            ).map((opt) => (
             <button
               key={opt.value}
               type="button"
-              onClick={() => setDevice(opt.value)}
+              onClick={() => setDeviceOverride(opt.value)}
               className={cn(
                 "flex items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors",
                 device === opt.value

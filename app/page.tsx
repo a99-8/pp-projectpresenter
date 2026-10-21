@@ -1,16 +1,31 @@
 import { ArrowLeft, FolderOpen, Layers, Sparkles, User } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 import { getProfile, getProjects } from "@/lib/data";
 import { BrandIcon } from "@/lib/icons";
-import { ProjectCard } from "@/components/project-card";
+import { toViewerScreens } from "@/lib/screens";
+import { HomeProjectViewer } from "@/components/home-project-viewer";
 import { Reveal } from "@/components/reveal";
 import { buttonVariants } from "@/components/ui/button";
+
+async function ProjectsShowcase() {
+  const entries = await Promise.all(
+    getProjects()
+      .filter((p) => p.screens.length > 0)
+      .map(async (p) => ({
+        slug: p.slug,
+        name: p.name,
+        tagline: p.tagline,
+        type: p.type,
+        screens: await toViewerScreens(p),
+      })),
+  );
+  return <HomeProjectViewer entries={entries} />;
+}
 
 export default function Home() {
   const profile = getProfile();
   const projects = getProjects();
-  const featured = projects.filter((p) => p.featured);
-  const shown = (featured.length ? featured : projects).slice(0, 3);
   const frameworks = [
     ...new Map(projects.map((p) => [p.framework.name, p.framework])).values(),
   ];
@@ -81,34 +96,64 @@ export default function Home() {
         </Reveal>
       </section>
 
+      {/* نبذة عني */}
+      <section className="relative mx-auto max-w-6xl px-4 pb-20 sm:px-6">
+        <Reveal>
+          <div className="flex flex-col items-start gap-6 rounded-3xl border border-border bg-card/80 p-6 backdrop-blur sm:p-8 md:flex-row md:items-center">
+            <div className="flex size-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary to-accent text-3xl font-bold text-primary-foreground">
+              {profile.name.trim().charAt(0)}
+            </div>
+            <div className="flex-1">
+              <h2 className="text-2xl font-bold">{profile.name}</h2>
+              <p className="mt-1 text-primary">{profile.role}</p>
+              <p className="mt-3 max-w-2xl leading-relaxed text-muted-foreground">
+                {profile.bio}
+              </p>
+            </div>
+            <Link
+              href="/about"
+              className={buttonVariants({ variant: "outline", size: "lg" }) + " shrink-0"}
+            >
+              <User className="size-4" />
+              تعرّف عليّ أكثر
+            </Link>
+          </div>
+        </Reveal>
+      </section>
+
       {/* المشاريع المميزة */}
       <section className="relative mx-auto max-w-6xl px-4 pb-20 sm:px-6">
         <Reveal className="flex items-end justify-between gap-4">
           <div>
             <h2 className="flex items-center gap-2 text-2xl font-bold">
               <Layers className="size-5 text-primary" />
-              مشاريع مميزة
+              استكشف المشاريع
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              كل مشروع بصفحة تفصيلية وعارض تفاعلي يحاكي واجهاته
+              اختر نوع المشروع وتنقّل بينها داخل عارض يحاكي الجهاز الحقيقي
             </p>
           </div>
           <Link
             href="/projects"
-            className="flex shrink-0 items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            className={buttonVariants({ variant: "outline", size: "sm" }) + " shrink-0"}
           >
-            كل المشاريع
+            عرض المزيد
             <ArrowLeft className="size-4" />
           </Link>
         </Reveal>
 
-        <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {shown.map((project, i) => (
-            <Reveal key={project.slug} delay={i * 0.08}>
-              <ProjectCard project={project} />
-            </Reveal>
-          ))}
-        </div>
+        <Reveal className="mt-6">
+          <Suspense
+            fallback={
+              <div className="animate-pulse space-y-5">
+                <div className="h-10 w-64 rounded-full bg-muted" />
+                <div className="mx-auto h-80 max-w-3xl rounded-2xl bg-muted" />
+              </div>
+            }
+          >
+            <ProjectsShowcase />
+          </Suspense>
+        </Reveal>
       </section>
 
       {/* التقنيات */}

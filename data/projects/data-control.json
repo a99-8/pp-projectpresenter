@@ -1,0 +1,168 @@
+{
+  "slug": "data-control",
+  "name": "Data Control",
+  "tagline": "إضافة متصفح لاستخراج بيانات صفحات الويب وحقنها وإدارتها عبر قواعد ديناميكية",
+  "description": "إضافة متصفح مبنية باستخدام WXT وReact وTypeScript لأتمتة استخراج البيانات من عناصر صفحات الويب وحقنها فيها. توفر إدارة مرنة للمجموعات والحقول، وقواعد تحويل وتحقق بصيغ شبيهة بـ Excel عبر HyperFormula، مع لوحة خيارات وقائمة منبثقة ولوحة جانبية تفاعلية. تدعم الإضافة تصدير CSV، وفحص عناصر DOM، والتعامل مع Shadow DOM، وواجهات عربية وإنجليزية باتجاهي RTL وLTR.",
+  "source": "open",
+  "repoUrl": "https://github.com/a99-8/data-control",
+  "type": "extension",
+  "framework": {
+    "name": "WXT"
+  },
+  "stack": [
+    "React",
+    "TypeScript",
+    "HyperFormula",
+    "Bootstrap",
+    "i18next",
+    "Papa Parse",
+    "query-selector-shadow-dom",
+    "Lucide"
+  ],
+  "storage": "local",
+  "status": "active",
+  "featured": false,
+  "year": 2026,
+  "features": [
+    "استخراج البيانات من صفحات الويب وحقنها في حقول النماذج",
+    "إدارة مجموعات وأقسام وحقول متعددة مع محددات DOM قابلة للتخصيص",
+    "تقييم قواعد ديناميكية بصيغ Excel مثل IF وIFS وAND وOR",
+    "فحص عناصر الصفحة واكتشاف حقول الإدخال من اللوحة الجانبية",
+    "نقل البيانات بين المجموعات ونسخها وتصديرها بصيغة CSV",
+    "التعامل مع عناصر Shadow DOM",
+    "واجهة عربية وإنجليزية مع دعم RTL وLTR",
+    "دعم متصفحي Chromium وFirefox عبر WXT"
+  ],
+  "highlights": [
+    "مطابقة الحقول وتسمياتها بزمن خطي O(N)",
+    "تشغيل محلي دون خادم أو قاعدة بيانات خارجية",
+    "واجهات متخصصة تشمل Popup وOptions Page وSide Panel",
+    "قواعد تحويل تربط الحقول بمعرفاتها وتدعم المقارنة بالقيمة الحالية"
+  ],
+  "challenges": [
+    {
+      "title": "ربط الصيغ بالحقول الديناميكية",
+      "problem": "تحتاج قواعد HyperFormula إلى الإشارة إلى حقول تحمل معرفات مخصصة بدل عناوين خلايا جداول البيانات.",
+      "solution": "بناء طبقة تحويل تطبع القيم، وتربط معرف كل حقل بعنوان خلية، ثم تعيد كتابة الصيغة قبل تقييمها مع دعم VALUE ومتغيرات LET."
+    },
+    {
+      "title": "التعامل مع صفحات ويب متنوعة",
+      "problem": "تختلف بنية الحقول والتسميات بين المواقع، وقد تكون بعض العناصر داخل Shadow DOM.",
+      "solution": "دعم استراتيجيات بحث متعددة ومطابقة فعالة للتسميات، مع استخدام query-selector-shadow-dom للوصول إلى العناصر المعزولة."
+    },
+    {
+      "title": "تنسيق العمل بين واجهات الإضافة",
+      "problem": "تعمل القائمة المنبثقة ولوحة الخيارات واللوحة الجانبية وContent Script في سياقات منفصلة.",
+      "solution": "استخدام رسائل Runtime موحدة لتنفيذ أوامر الاستخراج والحقن والنقل والنسخ، مع تخزين المجموعات محليًا ومزامنة التغييرات بين الواجهات."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "واجهات الإضافة",
+        "nodes": [
+          {
+            "id": "popup",
+            "label": "Popup",
+            "description": "تنفيذ أوامر الاستخراج والحقن والنقل والنسخ بسرعة",
+            "icon": "extension"
+          },
+          {
+            "id": "options",
+            "label": "Options Page",
+            "description": "إدارة المجموعات والأقسام والحقول وقواعدها",
+            "icon": "settings"
+          },
+          {
+            "id": "sidepanel",
+            "label": "Side Panel",
+            "description": "فحص الحقول وترتيب البيانات وتصدير CSV",
+            "icon": "web"
+          }
+        ]
+      },
+      {
+        "title": "منطق الإضافة",
+        "nodes": [
+          {
+            "id": "content-script",
+            "label": "Content Script",
+            "description": "الوصول إلى DOM وتنفيذ الاستخراج والحقن وفحص العناصر",
+            "icon": "code"
+          },
+          {
+            "id": "formula-engine",
+            "label": "HyperFormula Engine",
+            "description": "تقييم قواعد التحويل والتحقق الديناميكية",
+            "icon": "function"
+          }
+        ]
+      },
+      {
+        "title": "البيانات",
+        "nodes": [
+          {
+            "id": "browser-storage",
+            "label": "Browser Storage",
+            "description": "حفظ المجموعات وإعدادات الحقول محليًا",
+            "icon": "local"
+          },
+          {
+            "id": "webpage",
+            "label": "صفحة الويب",
+            "description": "مصدر البيانات ووجهة حقنها",
+            "icon": "web"
+          },
+          {
+            "id": "csv",
+            "label": "CSV",
+            "description": "استيراد البيانات وتصديرها",
+            "icon": "database"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      {
+        "from": "popup",
+        "to": "content-script",
+        "label": "أوامر Runtime"
+      },
+      {
+        "from": "sidepanel",
+        "to": "content-script",
+        "label": "فحص الحقول"
+      },
+      {
+        "from": "options",
+        "to": "browser-storage",
+        "label": "حفظ الإعدادات"
+      },
+      {
+        "from": "popup",
+        "to": "browser-storage",
+        "label": "قراءة المجموعات"
+      },
+      {
+        "from": "sidepanel",
+        "to": "browser-storage",
+        "label": "مزامنة البيانات"
+      },
+      {
+        "from": "content-script",
+        "to": "formula-engine",
+        "label": "تقييم القواعد"
+      },
+      {
+        "from": "content-script",
+        "to": "webpage",
+        "label": "استخراج وحقن"
+      },
+      {
+        "from": "sidepanel",
+        "to": "csv",
+        "label": "استيراد وتصدير"
+      }
+    ]
+  }
+}

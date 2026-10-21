@@ -34,4 +34,4 @@ pnpm build    # بناء الإنتاج
 - `data/profile.json` — الملف الشخصي.
 - `data/projects/*.json` أو `*.md` — مشروع لكل ملف.
 
-الدليل الكامل لصيغة الملفات: [`docs/PROJECT_SCHEMA.md`](docs/PROJECT_SCHEMA.md)
+الدليل الكامل لصيغة الملفات: [`data/PROJECT_SCHEMA.md`](data/PROJECT_SCHEMA.md)

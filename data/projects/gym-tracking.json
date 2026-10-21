@@ -1,0 +1,131 @@
+{
+  "slug": "gym-tracking",
+  "name": "Gym Tracking",
+  "tagline": "تطبيق Expo لتتبع تمارين الأسبوع وإدارة الجداول الرياضية",
+  "description": "تطبيق جوال مبني بـ Expo وReact Native لمساعدة المستخدم على تتبع تمارينه الرياضية أسبوعياً. يتيح إضافة تمارين لكل جزء من الجسم، تسجيل الأوزان والتكرارات، حفظ البيانات في SQLite محلي، وعرضها في جدول منظم.",
+  "source": "closed",
+  "type": "mobile",
+  "framework": {
+    "name": "Expo",
+    "icon": "expo"
+  },
+  "stack": [
+    "Expo",
+    "React Native",
+    "TypeScript",
+    "expo-sqlite",
+    "AsyncStorage",
+    "React Native Reanimated"
+  ],
+  "storage": "local",
+  "status": "active",
+  "year": 2026,
+  "features": [
+    "إدخال تمارين مخصصة لكل جزء من الجسم",
+    "تسجيل الأوزان، التكرارات، والملاحظات",
+    "عرض الجدول الأسبوعي لجميع التمارين",
+    "حفظ البيانات محلياً باستخدام SQLite",
+    "إضافة وحذف وإفراغ السجلات بسهولة",
+    "واجهة بسيطة ومرنة للاستخدام اليومي"
+  ],
+  "highlights": [
+    "عمل كامل offline عبر SQLite محلي",
+    "تصميم مكونات مخصص مع دعم RTL",
+    "فصل المنطق في hooks ودوال مساعدة"
+  ],
+  "challenges": [
+    {
+      "title": "إدارة حالة الجدول وتحديثه",
+      "problem": "يجب تحميل البيانات من SQLite وإعادة عرض الجدول عند كل إضافة أو حذف.",
+      "solution": "استخدام useTableManagement hook مع callback لإعادة تحميل البيانات بعد كل عملية."
+    },
+    {
+      "title": "تهيئة قاعدة البيانات المحلية",
+      "problem": "يجب إنشاء الجداول عند أول تشغيل والتعامل مع أخطاء التهيئة.",
+      "solution": "استخدام SQLiteProvider مع دالة init تُنفذ عبارات CREATE TABLE وتُبلغ عن أي خطأ."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "الواجهة",
+        "nodes": [
+          {
+            "id": "screens",
+            "label": "شاشات Expo Router",
+            "description": "الرئيسية وجدول التمارين",
+            "icon": "mobile"
+          },
+          {
+            "id": "components",
+            "label": "مكونات مشتركة",
+            "description": "جدول، أزرار، حقول إدخال منسدلة",
+            "icon": "layout"
+          }
+        ]
+      },
+      {
+        "title": "المنطق",
+        "nodes": [
+          {
+            "id": "hooks",
+            "label": "Hooks مخصصة",
+            "description": "useInputManagement، useTableManagement",
+            "icon": "react"
+          },
+          {
+            "id": "logic",
+            "label": "logic",
+            "description": "handleAdd، handleDelete، handleEmpty",
+            "icon": "code"
+          }
+        ]
+      },
+      {
+        "title": "التخزين",
+        "nodes": [
+          {
+            "id": "sqlite",
+            "label": "expo-sqlite",
+            "description": "حفظ التمارين والجداول محلياً",
+            "icon": "database"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      { "from": "screens", "to": "components", "label": "عرض" },
+      { "from": "components", "to": "hooks", "label": "تفاعل" },
+      { "from": "hooks", "to": "logic", "label": "عمليات" },
+      { "from": "logic", "to": "sqlite", "label": "حفظ/قراءة" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "home",
+      "title": "الرئيسية",
+      "device": "mobile",
+      "description": "نظرة عامة على التمارين الأسبوعية والوصول إلى الجدول.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f5f8fc;min-height:560px;padding:24px;color:#1a1a2e;display:flex;flex-direction:column;align-items:center'><div style='width:100px;height:100px;background:#22c55e;border-radius:50%;margin-bottom:32px;display:flex;align-items:center;justify-content:center;font-size:42px'>💪</div><h2 style='margin:0 0 12px'>Gym Tracking</h2><p style='color:#6b7280;text-align:center;margin:0 0 24px'>تتبع تمارينك كل أسبوع</p><div style='background:#22c55e;color:white;width:100%;max-width:260px;text-align:center;padding:14px;border-radius:10px;font-weight:600'>عرض الجدول الأسبوعي</div></div>"
+      },
+      "links": [
+        { "label": "الجدول", "target": "table" }
+      ]
+    },
+    {
+      "id": "table",
+      "title": "جدول التمارين",
+      "device": "mobile",
+      "description": "جدول يعرض تمارين الأسبوع مع إمكانية الإضافة والحذف.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f5f8fc;min-height:560px;padding:20px;color:#1a1a2e'><h2 style='margin:0 0 16px;text-align:center'>جدول التمارين</h2><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden'><div style='display:grid;grid-template-columns:1fr 1fr 1fr .5fr;background:#f1f5f9;padding:10px;font-size:12px;font-weight:bold'><span>العضلة</span><span>الوزن</span><span>التكرار</span><span></span></div><div style='display:grid;grid-template-columns:1fr 1fr 1fr .5fr;padding:10px;font-size:13px;border-top:1px solid #e2e8f0'><span>صدر</span><span>60 كجم</span><span>12</span><span style='color:#ef4444'>✕</span></div></div><div style='display:flex;gap:10px;margin-top:16px'><div style='flex:1;background:#3b82f6;color:white;text-align:center;padding:12px;border-radius:10px;font-size:13px;font-weight:600'>إضافة</div><div style='flex:1;background:#ef4444;color:white;text-align:center;padding:12px;border-radius:10px;font-size:13px;font-weight:600'>إفراغ</div></div></div>"
+      },
+      "links": [
+        { "label": "الرئيسية", "target": "home" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+{
+  "slug": "university-follow-up",
+  "name": "متابعة الجامعة",
+  "tagline": "تطبيق جوال عربي لتتبع المواد الجامعية والوحدات والمحاضرات مع تذكيرات ذكية",
+  "description": "تطبيق جوال مبني بـ Expo وReact Native لمساعدة طالب الجامعة على متابعة مواده الدراسية. ينظّم كل مادة إلى وحدات أسبوعية تُفتح تلقائياً حسب تاريخ النزول، ويتتبع المحاضرات المسجلة والمناقشات والواجبات بنسب إنجاز مرئية، إلى جانب المحاضرات المباشرة والحضورية. يعرض جدولاً زمنياً موحداً لجميع الأحداث، ويجدول إشعارات محلية للتذكير قبل المحاضرات بعشرين دقيقة — كل ذلك دون حساب أو خادم، فالبيانات تُحفظ محلياً على الجهاز.",
+  "source": "open",
+  "repoUrl": "https://github.com/a99-8/universityFollow-up",
+  "type": "mobile",
+  "framework": {
+    "name": "Expo",
+    "icon": "expo"
+  },
+  "stack": [
+    "Expo",
+    "React Native",
+    "Expo Router",
+    "TypeScript",
+    "AsyncStorage",
+    "expo-notifications",
+    "date-fns",
+    "React Native Reanimated"
+  ],
+  "storage": "local",
+  "status": "active",
+  "year": 2026,
+  "features": [
+    "لوحة رئيسية تعرض عدد المواد ونسبة إنجاز الأسبوع الحالي والإنجاز الكلي بلمحة واحدة",
+    "إضافة مادة بخطوة واحدة تولّد تلقائياً الوحدات الأسبوعية والمحاضرات المباشرة والواجبات والمناقشات",
+    "تتبع تفصيلي لكل وحدة: محاضرات مسجلة ومناقشات وواجبات بمربعات إنجاز",
+    "قفل الوحدات التي لم يحن تاريخ نزولها بعد لمحاكاة نظام الجامعة الفعلي",
+    "محاضرات مباشرة بجدولة نصف شهرية مع تسجيل الحضور",
+    "دعم المحاضرات الحضورية بإضافتها يدوياً مع اختيار التاريخ",
+    "جدول زمني موحد يجمع نزول الوحدات والمحاضرات المباشرة والحضورية مرتباً زمنياً بالعربية",
+    "إشعارات محلية للتذكير قبل كل محاضرة مباشرة أو حضورية بعشرين دقيقة",
+    "إعادة جدولة الإشعارات تلقائياً عند أي تعديل على المواد",
+    "واجهة عربية RTL مع دعم الوضع الفاتح والداكن وألوان مخصصة لكل مادة"
+  ],
+  "highlights": [
+    "خصوصية كاملة: لا خوادم ولا حسابات — كل البيانات في AsyncStorage على الجهاز",
+    "توليد تلقائي لهيكل المادة الدراسية كاملة (وحدات + محاضرات + واجبات) من مدخلات بسيطة",
+    "قنوات إشعارات أندرويد منفصلة للمحاضرات المباشرة والحضورية والمحتوى غير المشاهَد",
+    "تنقل قائم على الملفات عبر Expo Router مع مسارات مكتوبة الأنواع (Typed Routes)",
+    "تفعيل React Compiler تجريبياً لتحسين أداء العرض"
+  ],
+  "challenges": [
+    {
+      "title": "مزامنة الإشعارات مع تغيّر البيانات",
+      "problem": "أي تعديل على مادة (حضور محاضرة، إضافة محاضرة حضورية، حذف مادة) يجعل الإشعارات المجدولة قديمة أو خاطئة، ولا يمكن تعديل إشعار مجدول جزئياً.",
+      "solution": "تبنّي نمط إلغاء-إعادة-جدولة: بعد كل حفظ تُلغى جميع الإشعارات وتُعاد جدولتها من البيانات الأحدث، مع فلترة المحاضرات الماضية وربط كل إشعار بمعرّف المادة."
+    },
+    {
+      "title": "نمذجة الفصل الدراسي المتدرّج زمنياً",
+      "problem": "المواد الجامعية لا تُتاح دفعة واحدة بل تنزل وحدات أسبوعياً ومحاضرات مباشرة كل أسبوعين، ويجب حساب الإنجاز فقط مما أُتيح فعلاً للطالب.",
+      "solution": "توليد الوحدات بتواريخ نزول أسبوعية انطلاقاً من تاريخ أول وحدة، وتجاهل الوحدات المستقبلية عند حساب نسب الإنجاز مع إظهارها مقفلة في الواجهة."
+    },
+    {
+      "title": "عمل التطبيق دون وحدات أصلية في بيئات محدودة",
+      "problem": "expo-notifications وحدة أصلية غير متوفرة في Expo Go أو على الويب، واستيرادها المباشر يعطّل التطبيق بالكامل في هذه البيئات.",
+      "solution": "تحميل الوحدة شرطياً عبر require داخل try/catch وإرجاع قيم فارغة من كل دوال الإشعارات عند غيابها، فيبقى التطبيق كاملاً مع تعطيل التذكيرات فقط."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "الواجهة",
+        "nodes": [
+          {
+            "id": "screens",
+            "label": "شاشات Expo Router",
+            "description": "الرئيسية والمواد وتفاصيل المادة والجدول وإضافة مادة",
+            "icon": "mobile"
+          },
+          {
+            "id": "components",
+            "label": "مكونات مشتركة",
+            "description": "أزرار وحقول ومربعات إنجاز ونصوص تدعم السمات",
+            "icon": "layout"
+          }
+        ]
+      },
+      {
+        "title": "المنطق",
+        "nodes": [
+          {
+            "id": "hook",
+            "label": "useCourses",
+            "description": "حالة المواد ومزامنتها مع التخزين والإشعارات",
+            "icon": "react"
+          },
+          {
+            "id": "schedule",
+            "label": "منطق الجدولة",
+            "description": "توليد الوحدات وحساب الإنجاز ومواعيد المحاضرات",
+            "icon": "calendar"
+          }
+        ]
+      },
+      {
+        "title": "الخدمات",
+        "nodes": [
+          {
+            "id": "storage",
+            "label": "AsyncStorage",
+            "description": "حفظ المواد محلياً على الجهاز بصيغة JSON",
+            "icon": "database"
+          },
+          {
+            "id": "notifications",
+            "label": "expo-notifications",
+            "description": "تذكير قبل المحاضرات بعشرين دقيقة بقنوات أندرويد مخصصة",
+            "icon": "bell"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      { "from": "screens", "to": "components", "label": "عرض وتفاعل" },
+      { "from": "screens", "to": "hook", "label": "قراءة وتعديل" },
+      { "from": "hook", "to": "schedule", "label": "حساب الإنجاز" },
+      { "from": "hook", "to": "storage", "label": "حفظ محلي" },
+      { "from": "hook", "to": "notifications", "label": "إعادة جدولة" },
+      { "from": "schedule", "to": "notifications", "label": "مواعيد التذكير" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "home",
+      "title": "الرئيسية",
+      "device": "mobile",
+      "description": "لوحة الإنجاز: عدد المواد ونسبة إنجاز الأسبوع والإنجاز الكلي مع ملخص سريع لكل مادة.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f5f8fc;min-height:560px;padding:18px;color:#1a1a2e'><h2 style='text-align:center;margin:0 0 18px'>متابعة الجامعة</h2><div style='display:flex;gap:8px;margin-bottom:16px'><div style='flex:1;background:white;border-radius:12px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)'><b style='display:block;font-size:20px'>3</b><small style='color:#6b7280'>المواد</small></div><div style='flex:1;background:white;border-radius:12px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)'><b style='display:block;font-size:20px'>72%</b><small style='color:#6b7280'>إنجاز هذا الأسبوع</small></div><div style='flex:1;background:white;border-radius:12px;padding:14px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,.06)'><b style='display:block;font-size:20px'>58%</b><small style='color:#6b7280'>الإنجاز الكلي</small></div></div><div style='background:white;border-radius:12px;padding:14px;margin-bottom:16px'><b style='font-size:14px'>ملخص المواد</b><div style='display:flex;align-items:center;gap:8px;padding:10px 0 4px'><span style='width:12px;height:12px;border-radius:6px;background:#3c87f7'></span><span style='flex:1;font-size:13px'>قواعد البيانات</span><b style='font-size:12px'>65%</b></div><div style='display:flex;align-items:center;gap:8px;padding:6px 0'><span style='width:12px;height:12px;border-radius:6px;background:#34c759'></span><span style='flex:1;font-size:13px'>هياكل البيانات</span><b style='font-size:12px'>48%</b></div><div style='display:flex;align-items:center;gap:8px;padding:6px 0'><span style='width:12px;height:12px;border-radius:6px;background:#ff9500'></span><span style='flex:1;font-size:13px'>شبكات الحاسوب</span><b style='font-size:12px'>60%</b></div></div><div style='background:#3c87f7;color:white;text-align:center;padding:12px;border-radius:10px;margin-bottom:8px;font-size:14px'>إدارة المواد</div><div style='background:#e8f1fd;color:#3c87f7;text-align:center;padding:12px;border-radius:10px;font-size:14px'>عرض الجدول</div></div>"
+      },
+      "links": [
+        { "label": "إدارة المواد", "target": "courses" },
+        { "label": "عرض الجدول", "target": "schedule" },
+        { "label": "فتح مادة", "target": "course-detail" }
+      ]
+    },
+    {
+      "id": "courses",
+      "title": "المواد الدراسية",
+      "device": "mobile",
+      "description": "قائمة المواد ببطاقات ملوّنة تعرض عدد الوحدات والمحاضرات المباشرة وشريط الإنجاز.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f5f8fc;min-height:560px;padding:18px;color:#1a1a2e'><h2 style='text-align:center;margin:0 0 18px'>المواد الدراسية</h2><div style='background:white;border-radius:12px;padding:14px;border-right:6px solid #3c87f7;margin-bottom:10px'><b style='font-size:15px'>قواعد البيانات</b><p style='margin:5px 0;color:#6b7280;font-size:12px'>14 وحدة · 3 محاضرات مباشرة</p><div style='display:flex;align-items:center;gap:8px;margin-top:8px'><div style='flex:1;height:8px;border-radius:4px;background:#3c87f740'><div style='height:100%;width:65%;background:#3c87f7;border-radius:4px'></div></div><b style='font-size:12px'>65%</b></div></div><div style='background:white;border-radius:12px;padding:14px;border-right:6px solid #34c759;margin-bottom:10px'><b style='font-size:15px'>هياكل البيانات</b><p style='margin:5px 0;color:#6b7280;font-size:12px'>14 وحدة · 3 محاضرات مباشرة</p><div style='display:flex;align-items:center;gap:8px;margin-top:8px'><div style='flex:1;height:8px;border-radius:4px;background:#34c75940'><div style='height:100%;width:48%;background:#34c759;border-radius:4px'></div></div><b style='font-size:12px'>48%</b></div></div><div style='background:white;border-radius:12px;padding:14px;border-right:6px solid #ff9500;margin-bottom:16px'><b style='font-size:15px'>شبكات الحاسوب</b><p style='margin:5px 0;color:#6b7280;font-size:12px'>12 وحدة · 3 محاضرات مباشرة</p><div style='display:flex;align-items:center;gap:8px;margin-top:8px'><div style='flex:1;height:8px;border-radius:4px;background:#ff950040'><div style='height:100%;width:60%;background:#ff9500;border-radius:4px'></div></div><b style='font-size:12px'>60%</b></div></div><div style='background:#3c87f7;color:white;text-align:center;padding:12px;border-radius:10px;font-size:14px'>إضافة مادة</div></div>"
+      },
+      "links": [
+        { "label": "إضافة مادة", "target": "add-course" },
+        { "label": "فتح مادة", "target": "course-detail" },
+        { "label": "العودة للرئيسية", "target": "home" }
+      ]
+    },
+    {
+      "id": "course-detail",
+      "title": "تفاصيل المادة",
+      "device": "mobile",
+      "description": "وحدات المادة مع المحاضرات المسجلة والمناقشات والواجبات والمحاضرات المباشرة والحضورية.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f5f8fc;min-height:560px;padding:18px;color:#1a1a2e'><div style='background:#3c87f720;border-radius:12px;padding:16px;text-align:center;margin-bottom:12px'><b style='font-size:18px'>قواعد البيانات</b><p style='margin:5px 0;color:#6b7280;font-size:12px'>14 وحدة · تبدأ 01/09/2026</p></div><div style='background:white;border-radius:12px;padding:14px;margin-bottom:10px'><b style='font-size:12px;display:block;margin-bottom:8px'>وحدات هذا الأسبوع</b><span style='font-size:12px;color:#6b7280'>الوحدة 6 · 19/10/2026</span></div><div style='background:white;border-radius:12px;padding:14px;margin-bottom:10px'><b style='font-size:12px;display:block;margin-bottom:8px'>المحاضرات المباشرة</b><label style='display:flex;gap:8px;font-size:12px;padding:4px 0'><input type='checkbox' checked>محاضرة مباشرة 1 · 19:00-21:00</label><label style='display:flex;gap:8px;font-size:12px;padding:4px 0'><input type='checkbox'>محاضرة مباشرة 2 · 19:00-21:00</label></div><b style='font-size:14px;display:block;margin:10px 0'>الوحدات</b><div style='background:white;border-radius:12px;padding:14px;margin-bottom:8px'><div style='display:flex;justify-content:space-between'><b style='font-size:14px'>الوحدة 5</b><small style='color:#6b7280'>12/10/2026</small></div><label style='display:flex;gap:8px;font-size:12px;padding:5px 0 0'><input type='checkbox' checked>محاضرة مسجلة 1</label><label style='display:flex;gap:8px;font-size:12px;padding:4px 0'><input type='checkbox' checked>محاضرة مسجلة 2</label><label style='display:flex;gap:8px;font-size:12px;padding:4px 0'><input type='checkbox'>مناقشة الوحدة 1</label><label style='display:flex;gap:8px;font-size:12px;padding:4px 0'><input type='checkbox'>واجب 1</label></div><div style='background:white;border-radius:12px;padding:14px'><div style='display:flex;justify-content:space-between'><b style='font-size:14px'>الوحدة 7</b><small style='color:#6b7280'>26/10/2026</small></div><span style='font-size:12px;color:#ff9500'>لم تُنزل بعد</span></div></div>"
+      },
+      "links": [
+        { "label": "العودة للمواد", "target": "courses" }
+      ]
+    },
+    {
+      "id": "add-course",
+      "title": "إضافة مادة",
+      "device": "mobile",
+      "description": "نموذج إنشاء مادة جديدة يولّد الوحدات والمحاضرات تلقائياً من مدخلات بسيطة.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f5f8fc;min-height:560px;padding:18px;color:#1a1a2e'><b style='font-size:16px'>مادة جديدة</b><label style='display:block;font-size:11px;color:#6b7280;margin:14px 0 5px'>اسم المادة</label><div style='background:white;border:1px solid #e2e8f0;border-radius:9px;padding:11px;font-size:13px'>مثال: الرياضيات</div><label style='display:block;font-size:11px;color:#6b7280;margin:12px 0 5px'>عدد الوحدات</label><div style='background:white;border:1px solid #e2e8f0;border-radius:9px;padding:11px;font-size:13px'>14</div><label style='display:block;font-size:11px;color:#6b7280;margin:12px 0 5px'>تاريخ نزول أول وحدة</label><div style='background:#eef2f7;border-radius:9px;padding:11px;font-size:13px'>01/09/2026</div><label style='display:block;font-size:11px;color:#6b7280;margin:12px 0 5px'>وقت المحاضرة المباشرة (بدء - انتهاء)</label><div style='display:flex;gap:8px'><div style='flex:1;background:white;border:1px solid #e2e8f0;border-radius:9px;padding:11px;font-size:13px'>19:00</div><div style='flex:1;background:white;border:1px solid #e2e8f0;border-radius:9px;padding:11px;font-size:13px'>21:00</div></div><label style='display:flex;gap:8px;font-size:12px;margin-top:14px'><input type='checkbox'>المادة تحتوي على محاضرات حضورية</label><label style='display:block;font-size:11px;color:#6b7280;margin:14px 0 6px'>لون المادة</label><div style='display:flex;gap:10px;margin-bottom:18px'><span style='width:32px;height:32px;border-radius:16px;background:#3c87f7;border:3px solid #000'></span><span style='width:32px;height:32px;border-radius:16px;background:#34c759'></span><span style='width:32px;height:32px;border-radius:16px;background:#ff9500'></span><span style='width:32px;height:32px;border-radius:16px;background:#ff453a'></span><span style='width:32px;height:32px;border-radius:16px;background:#af52de'></span></div><div style='background:#3c87f7;color:white;text-align:center;padding:12px;border-radius:10px;font-size:14px'>حفظ المادة</div></div>"
+      },
+      "links": [
+        { "label": "العودة للمواد", "target": "courses" }
+      ]
+    },
+    {
+      "id": "schedule",
+      "title": "الجدول الزمني",
+      "device": "mobile",
+      "description": "خط زمني موحد يجمع نزول الوحدات والمحاضرات المباشرة والحضورية لكل المواد.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f5f8fc;min-height:560px;padding:18px;color:#1a1a2e'><h2 style='text-align:center;margin:0 0 18px'>الجدول الزمني</h2><div style='display:flex;gap:10px;background:white;border-radius:12px;padding:14px;border-right:5px solid #3c87f7;margin-bottom:8px'><div style='text-align:center;min-width:64px'><b style='display:block;font-size:11px'>الأحد</b><b style='display:block;font-size:18px'>19</b><small style='font-size:11px;color:#6b7280'>أكتوبر</small></div><div><b style='display:block;font-size:13px'>نزول الوحدة 6</b><small style='font-size:11px;color:#6b7280'>قواعد البيانات</small></div></div><div style='display:flex;gap:10px;background:white;border-radius:12px;padding:14px;border-right:5px solid #34c759;margin-bottom:8px'><div style='text-align:center;min-width:64px'><b style='display:block;font-size:11px'>الثلاثاء</b><b style='display:block;font-size:18px'>21</b><small style='font-size:11px;color:#6b7280'>أكتوبر</small></div><div><b style='display:block;font-size:13px'>محاضرة مباشرة · 19:00-21:00</b><small style='font-size:11px;color:#6b7280'>هياكل البيانات</small></div></div><div style='display:flex;gap:10px;background:white;border-radius:12px;padding:14px;border-right:5px solid #ff9500;margin-bottom:8px'><div style='text-align:center;min-width:64px'><b style='display:block;font-size:11px'>الأربعاء</b><b style='display:block;font-size:18px'>22</b><small style='font-size:11px;color:#6b7280'>أكتوبر</small></div><div><b style='display:block;font-size:13px'>محاضرة حضورية · مختبر الشبكات</b><small style='font-size:11px;color:#6b7280'>شبكات الحاسوب</small></div></div><div style='display:flex;gap:10px;background:white;border-radius:12px;padding:14px;border-right:5px solid #3c87f7'><div style='text-align:center;min-width:64px'><b style='display:block;font-size:11px'>الأحد</b><b style='display:block;font-size:18px'>26</b><small style='font-size:11px;color:#6b7280'>أكتوبر</small></div><div><b style='display:block;font-size:13px'>نزول الوحدة 7</b><small style='font-size:11px;color:#6b7280'>قواعد البيانات</small></div></div></div>"
+      },
+      "links": [
+        { "label": "العودة للرئيسية", "target": "home" }
+      ]
+    }
+  ]
+}

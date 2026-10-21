@@ -1,0 +1,160 @@
+{
+  "slug": "super-market-sys",
+  "name": "نظام إدارة السوبر ماركت",
+  "tagline": "نظام نقاط بيع وإدارة مخزون محلي للمحلات التجارية",
+  "description": "تطبيق ويب عربي مبني بـ Next.js لإدارة السوبر ماركت: نقاط البيع، إدارة المنتجات والمخزون، إدارة المستخدمين والأدوار، إدارة الصندوق/الدرج، والتقارير اليومية. يعمل بالكامل على المتصفح باستخدام IndexedDB عبر Dexie، مما يلغي الحاجة لخادم خلفي أو اتصال دائم بالإنترنت.",
+  "source": "closed",
+  "type": "web",
+  "framework": {
+    "name": "Next.js",
+    "icon": "nextjs"
+  },
+  "stack": [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "Dexie",
+    "IndexedDB",
+    "Zustand",
+    "i18next",
+    "Headless UI",
+    "Heroicons",
+    "Lucide React"
+  ],
+  "storage": "local",
+  "status": "active",
+  "year": 2026,
+  "features": [
+    "نظام مصادقة بأدوار متعددة: كاشير، أمين مخزن، مدير، مشرف تقارير، إلخ",
+    "إدارة المنتجات والمخزون مع الباركود وسعر التكلفة والبيع والخصومات",
+    "شاشة فواتير متعددة الألسنة (Tabs) لخدمة أكثر من عميل في نفس الوقت",
+    "دعم طرق دفع متعددة: نقدي، بطاقة، آجل",
+    "إدارة الصندوق/الدرج: فتح، إيداع، سحب، صرف، تسوية الفئات النقدية",
+    "حساب الباقي والفئات النقدية تلقائياً",
+    "تقارير يومية للمبيعات والأرباح حسب طريقة الدفع",
+    "إدارة المستخدمين والآجال والرصيد الائتماني",
+    "استيراد وتصدير بيانات المنتجات عبر JSON",
+    "واجهة عربية RTL مع دعم اللغة الإنجليزية"
+  ],
+  "highlights": [
+    "يعمل بالكامل محلياً على المتصفح باستخدام IndexedDB دون خادم",
+    "نظام أدوار دقيق يتحكم في صلاحيات الوصول لكل قائمة وإجراء",
+    "فواتير متعددة الألسنة لتحسين سرعة البيع في المحلات المزدحمة",
+    "حساب الباقي على مستوى الفئات النقدية لتقليل الأخطاء"
+  ],
+  "challenges": [
+    {
+      "title": "إدارة حالة الفواتير المتعددة",
+      "problem": "قد يفتح الكاشير عدة فواتير في نفس الوقت مع تبديل سريع بينها.",
+      "solution": "استخدام Zustand لإدارة ألسنة الفواتير مع إضافة وتحديث وحذف العناصر وإغلاق كل تبويب على حدة."
+    },
+    {
+      "title": "حساب الباقي مع توزيع الفئات النقدية",
+      "problem": "يجب إرجاع الباقي باستخدام الفئات المتوفرة في الدرج بدقة.",
+      "solution": "دوال changeCalculator تفحص الفئات المتاحة وتختار التوزيع الأمثل مع معالجة نقص الفكة."
+    },
+    {
+      "title": "حماية المسارات حسب الأدوار",
+      "problem": "كل دور يصل إلى أقسام مختلفة (المخزن، التقارير، المستخدمين، الإعدادات).",
+      "solution": "مكون RoleGuard يتحقق من دور المستخدم ويمنع الوصول غير المصرح به عبر قائمة جانبية مخصصة."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "الواجهة",
+        "nodes": [
+          {
+            "id": "app",
+            "label": "Next.js App Router",
+            "description": "شاشات تسجيل الدخول واللوحة والفواتير والمخزون والتقارير",
+            "icon": "web"
+          },
+          {
+            "id": "components",
+            "label": "مكونات الوحدات",
+            "description": "drawer، invoices، inventory، reports، users",
+            "icon": "layout"
+          }
+        ]
+      },
+      {
+        "title": "المنطق",
+        "nodes": [
+          {
+            "id": "hooks",
+            "label": "Hooks مخصصة",
+            "description": "useInvoices، useInventory، useDrawer، useUsers",
+            "icon": "react"
+          },
+          {
+            "id": "services",
+            "label": "Services",
+            "description": "invoiceService، productService، drawerService، userService",
+            "icon": "server"
+          }
+        ]
+      },
+      {
+        "title": "التخزين",
+        "nodes": [
+          {
+            "id": "db",
+            "label": "Dexie + IndexedDB",
+            "description": "قاعدة بيانات محلية للمنتجات والفواتير والمستخدمين والدرج",
+            "icon": "database"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      { "from": "app", "to": "components", "label": "عرض" },
+      { "from": "components", "to": "hooks", "label": "أحداث" },
+      { "from": "hooks", "to": "services", "label": "عمليات" },
+      { "from": "services", "to": "db", "label": "حفظ/قراءة" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "invoices",
+      "title": "شاشة الفواتير",
+      "device": "desktop",
+      "description": "ألسنة فواتير متعددة مع شبكة منتجات وسلة وطرق دفع متنوعة.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:20px;color:#0f172a'><div style='max-width:1000px;margin:auto'><div style='display:flex;gap:8px;margin-bottom:14px'><span style='background:#2563eb;color:white;padding:6px 14px;border-radius:8px;font-size:13px'>فاتورة 1</span><span style='background:white;border:1px solid #e2e8f0;padding:6px 14px;border-radius:8px;font-size:13px'>فاتورة 2 +</span></div><div style='display:grid;grid-template-columns:2fr 1fr;gap:14px'><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px'><b>شبكة المنتجات</b><div style='display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px'><div style='background:#f1f5f9;padding:12px;border-radius:8px;text-align:center;font-size:13px'>ماء 500مل</div><div style='background:#f1f5f9;padding:12px;border-radius:8px;text-align:center;font-size:13px'>خبز</div><div style='background:#f1f5f9;padding:12px;border-radius:8px;text-align:center;font-size:13px'>حليب</div></div></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px'><b>السلة</b><p style='font-size:13px;color:#64748b;margin-top:8px'>3 عناصر</p><div style='margin-top:14px;font-size:14px'><b>المجموع: 45.00 ر.س</b></div><div style='display:flex;gap:8px;margin-top:12px'><div style='flex:1;background:#22c55e;color:white;text-align:center;padding:8px;border-radius:6px;font-size:12px'>نقداً</div><div style='flex:1;background:#3b82f6;color:white;text-align:center;padding:8px;border-radius:6px;font-size:12px'>بطاقة</div></div></div></div></div></div>"
+      },
+      "links": [
+        { "label": "المخزون", "target": "inventory" },
+        { "label": "التقارير", "target": "reports" }
+      ]
+    },
+    {
+      "id": "inventory",
+      "title": "إدارة المخزون",
+      "device": "desktop",
+      "description": "قائمة المنتجات مع إمكانية الإضافة والتعديل والاستيراد/التصدير عبر JSON.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:20px;color:#0f172a'><div style='max-width:900px;margin:auto'><div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:16px'><h2 style='margin:0'>إدارة المخزون</h2><div style='background:#0f172a;color:white;padding:8px 14px;border-radius:8px;font-size:13px'>إضافة منتج</div></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden'><div style='display:grid;grid-template-columns:2fr 1fr 1fr 1fr;background:#f1f5f9;padding:12px 16px;font-size:13px;font-weight:bold'><span>المنتج</span><span>الباركود</span><span>السعر</span><span>المخزون</span></div><div style='display:grid;grid-template-columns:2fr 1fr 1fr 1fr;padding:12px 16px;font-size:13px;border-top:1px solid #e2e8f0'><span>ماء 500مل</span><span>628100123</span><span>2.50</span><span>48</span></div></div></div></div>"
+      },
+      "links": [
+        { "label": "الفواتير", "target": "invoices" }
+      ]
+    },
+    {
+      "id": "reports",
+      "title": "التقارير اليومية",
+      "device": "desktop",
+      "description": "إحصائيات المبيعات والأرباح حسب طريقة الدفع.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:20px;color:#0f172a'><div style='max-width:900px;margin:auto'><h2 style='margin:0 0 16px'>التقارير اليومية</h2><div style='display:grid;grid-template-columns:repeat(3,1fr);gap:12px'><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px'><small style='color:#64748b'>إجمالي المبيعات</small><b style='display:block;font-size:20px;margin-top:4px'>4,250</b></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px'><small style='color:#64748b'>نقدي</small><b style='display:block;font-size:20px;margin-top:4px'>2,800</b></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px'><small style='color:#64748b'>بطاقة</small><b style='display:block;font-size:20px;margin-top:4px'>1,450</b></div></div></div></div>"
+      },
+      "links": [
+        { "label": "الفواتير", "target": "invoices" }
+      ]
+    }
+  ]
+}

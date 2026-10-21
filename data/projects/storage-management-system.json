@@ -1,0 +1,194 @@
+{
+  "slug": "storage-management-system",
+  "name": "نظام إدارة المخزن المتقدم",
+  "tagline": "منصة عربية لإدارة المنتجات والمخزون والحركات مع تقارير مرئية واستيراد جماعي",
+  "description": "نظام ويب متكامل لإدارة المخزون مبني بـ Next.js وPostgreSQL. يجمع المنتجات حسب رمز SKU الرئيسي، ويتتبع الكميات الفعلية انطلاقاً من الفرز المبدئي وحركات الاستيراد والتصدير، ويوفر إدارة تفصيلية للمنتجات ومواقعها داخل المخزن، إلى جانب لوحة إحصائية ورسوم بيانية وفلاتر متعددة. يدعم النظام إنشاء رموز SKU تلقائياً، والاستيراد والتصدير عبر CSV، وتسجيل الدخول المقيّد للمستخدمين المصرح لهم.",
+  "source": "open",
+  "repoUrl": "https://github.com/a99-8/storage-management-system",
+  "type": "web",
+  "framework": {
+    "name": "Next.js",
+    "icon": "nextjs"
+  },
+  "stack": [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "PostgreSQL",
+    "Neon",
+    "Drizzle ORM",
+    "React Hook Form",
+    "Zod",
+    "Recharts",
+    "PapaParse",
+    "shadcn/ui",
+    "Lucide React"
+  ],
+  "storage": "cloud",
+  "status": "active",
+  "year": 2026,
+  "features": [
+    "لوحة رئيسية تجمع متغيرات المنتجات حسب رمز SKU الرئيسي وتعرض الرصيد المتاح لكل مقاس ولون",
+    "إدارة كاملة للمنتجات تشمل الإضافة والتعديل والحذف وتحديد رقم المخزن والرف والقسم",
+    "توليد تلقائي ومنظم لرموز SKU وأوصاف المنتجات من خصائص النوع واللون والمقاس والفئة العمرية",
+    "حساب المخزون الحالي من الفرز المبدئي مضافاً إليه الوارد ومطروحاً منه الصادر",
+    "تسجيل حركات الاستيراد والتصدير مع أرقام الاسترجاع والملاحظات وسجل زمني كامل",
+    "ملخص تفاعلي للمخزون مع فلاتر ورسوم شريطية ودائرية حسب النوع واللون والمقاس والموقع",
+    "التبديل بين تحليل عدد المنتجات وتحليل إجمالي الكميات في التقارير",
+    "استيراد جماعي للفرز المبدئي والحركات من ملفات CSV مع معاينة ونتائج تفصيلية",
+    "تصدير بيانات المنتجات إلى CSV",
+    "تسجيل دخول مقيّد بالبريد الإلكتروني مع جلسة موقعة محفوظة في Cookie"
+  ],
+  "highlights": [
+    "واجهة عربية RTL متجاوبة ومبنية بمكونات shadcn/ui",
+    "قاعدة بيانات PostgreSQL سحابية عبر Neon مع مخطط وفهارس مُدارة بواسطة Drizzle ORM",
+    "الحفاظ على سجل الحركات حتى بعد حذف المنتج لدعم التتبع التاريخي",
+    "تصنيف بصري غني للمخزون باستخدام الألوان والمقاسات وأيقونات أنواع المنتجات",
+    "واجهات API موحدة للمنتجات والحركات والملخص والاستيراد والتصدير"
+  ],
+  "challenges": [
+    {
+      "title": "حساب الرصيد الفعلي للمخزون",
+      "problem": "لا تكفي كمية الفرز المبدئي لمعرفة الرصيد الحالي، إذ يجب دمج جميع حركات الوارد والصادر لكل منتج دون فقد السجل التاريخي.",
+      "solution": "فصل المنتجات عن الحركات في PostgreSQL وحساب الرصيد من initialCount ومجاميع حركات IMPORT وEXPORT، مع إبقاء الحركات محفوظة عند حذف المنتج."
+    },
+    {
+      "title": "تمثيل متغيرات المنتج برمز منظم",
+      "problem": "قد يشترك المنتج الأساسي في عشرات التركيبات من النوع واللون والمقاس ولون التطريز والفئة العمرية، مما يصعّب الإدخال والبحث اليدوي.",
+      "solution": "بناء مولد SKU يعتمد بيانات مرجعية محلية، مع استخدام mainSku للتجميع وsku فريد لكل تركيبة من الخصائص."
+    },
+    {
+      "title": "استيراد البيانات التشغيلية بالجملة",
+      "problem": "ملفات المخزون والحركات قد تحتوي صفوفاً غير صالحة أو رموز منتجات غير موجودة، ولا ينبغي أن تمر الأخطاء دون توضيح للمستخدم.",
+      "solution": "إضافة تدفق استيراد يعرض معاينة أولية ثم يتحقق من الصفوف ورموز SKU ويعيد تقريراً يوضح السجلات المستوردة والمرفوضة وأسباب الرفض."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "واجهة المستخدم",
+        "nodes": [
+          {
+            "id": "ui",
+            "label": "Next.js + React",
+            "description": "صفحات App Router عربية RTL ولوحات الإدارة والنماذج التفاعلية",
+            "icon": "web"
+          },
+          {
+            "id": "charts",
+            "label": "Recharts",
+            "description": "رسوم المخزون الشريطية والدائرية والفلاتر التحليلية",
+            "icon": "chart"
+          }
+        ]
+      },
+      {
+        "title": "طبقة التطبيق",
+        "nodes": [
+          {
+            "id": "api",
+            "label": "Next.js Route Handlers",
+            "description": "واجهات المنتجات والحركات والملخص والاستيراد والتصدير",
+            "icon": "server"
+          },
+          {
+            "id": "auth",
+            "label": "مصادقة مخصصة",
+            "description": "جلسة Cookie موقعة بـ HMAC وتقييد الدخول بالبريد المسموح",
+            "icon": "lock"
+          },
+          {
+            "id": "domain",
+            "label": "منطق المخزون وSKU",
+            "description": "حساب الأرصدة وتوليد الرموز وربط الخصائص المرجعية",
+            "icon": "package"
+          }
+        ]
+      },
+      {
+        "title": "طبقة البيانات",
+        "nodes": [
+          {
+            "id": "orm",
+            "label": "Drizzle ORM",
+            "description": "استعلامات المنتجات والحركات وتعريف المخطط والفهارس",
+            "icon": "database"
+          },
+          {
+            "id": "db",
+            "label": "Neon PostgreSQL",
+            "description": "تخزين سحابي دائم للمنتجات وسجل الحركات",
+            "icon": "cloud"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      { "from": "ui", "to": "api", "label": "طلبات الإدارة" },
+      { "from": "charts", "to": "api", "label": "بيانات الملخص" },
+      { "from": "ui", "to": "auth", "label": "تسجيل الدخول" },
+      { "from": "api", "to": "domain", "label": "قواعد العمل" },
+      { "from": "domain", "to": "orm", "label": "قراءة وكتابة" },
+      { "from": "orm", "to": "db", "label": "SQL آمن" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "dashboard",
+      "title": "لوحة المخزون",
+      "device": "desktop",
+      "description": "عرض المنتجات مجمعة حسب SKU الرئيسي مع الكمية الإجمالية والمقاسات وتفاصيل كل متغير.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;color:#0f172a'><div style='max-width:980px;margin:auto'><div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:20px'><div><h1 style='margin:0;font-size:24px'>لوحة المخزون</h1><p style='margin:5px 0;color:#64748b;font-size:13px'>نظرة شاملة على المنتجات والكميات المتاحة</p></div><div style='background:#0f172a;color:white;padding:9px 15px;border-radius:9px;font-size:13px'>إضافة منتج</div></div><div style='display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px'><div style='background:white;padding:15px;border:1px solid #e2e8f0;border-radius:12px'><small style='color:#64748b'>إجمالي المنتجات</small><b style='display:block;font-size:22px;margin-top:5px'>128</b></div><div style='background:white;padding:15px;border:1px solid #e2e8f0;border-radius:12px'><small style='color:#64748b'>إجمالي القطع</small><b style='display:block;font-size:22px;margin-top:5px'>2,460</b></div><div style='background:white;padding:15px;border:1px solid #e2e8f0;border-radius:12px'><small style='color:#64748b'>وارد اليوم</small><b style='display:block;font-size:22px;margin-top:5px;color:#059669'>84</b></div><div style='background:white;padding:15px;border:1px solid #e2e8f0;border-radius:12px'><small style='color:#64748b'>صادر اليوم</small><b style='display:block;font-size:22px;margin-top:5px;color:#dc2626'>31</b></div></div><div style='background:white;border:1px solid #e2e8f0;border-radius:14px;padding:16px;display:flex;gap:18px'><div style='width:125px;text-align:center;border-left:1px solid #e2e8f0;padding-left:16px'><div style='height:92px;background:#eff6ff;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:42px'>▣</div><b style='display:block;margin-top:8px'>قميص رياضي</b><span style='display:inline-block;background:#e2e8f0;padding:4px 10px;border-radius:20px;margin-top:5px;font-size:12px'>320 قطعة</span></div><div style='flex:1'><b style='font-size:13px;color:#475569'>المقاسات المتوفرة</b><div style='display:flex;gap:7px;margin:10px 0 18px'><span style='border:1px solid #cbd5e1;padding:5px 10px;border-radius:7px;font-size:12px'>S (45)</span><span style='border:1px solid #cbd5e1;padding:5px 10px;border-radius:7px;font-size:12px'>M (110)</span><span style='border:1px solid #cbd5e1;padding:5px 10px;border-radius:7px;font-size:12px'>L (98)</span><span style='border:1px solid #cbd5e1;padding:5px 10px;border-radius:7px;font-size:12px'>XL (67)</span></div><div style='background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:12px;display:flex;justify-content:space-between;font-size:13px'><span>تفاصيل المتغيرات</span><b>12 متغيراً</b></div></div></div></div></div>"
+      },
+      "links": [
+        { "label": "عرض الملخص", "target": "summary" },
+        { "label": "إدارة الحركات", "target": "transactions" },
+        { "label": "الاستيراد الجماعي", "target": "bulk-import" }
+      ]
+    },
+    {
+      "id": "summary",
+      "title": "ملخص المخزن",
+      "device": "desktop",
+      "description": "مؤشرات ورسوم تفاعلية لتحليل المخزون حسب العدد أو الكمية والخصائص المختلفة.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;color:#0f172a'><div style='max-width:980px;margin:auto'><div style='display:flex;justify-content:space-between;align-items:center'><div><h1 style='margin:0;font-size:24px'>ملخص المخزن</h1><p style='color:#64748b;font-size:13px'>تحليل توزيع المنتجات والكميات</p></div><div style='display:flex;background:#e2e8f0;border-radius:9px;padding:3px;font-size:12px'><span style='background:white;padding:7px 14px;border-radius:7px'>حسب الكمية</span><span style='padding:7px 14px'>حسب العدد</span></div></div><div style='display:flex;gap:8px;margin:15px 0'><span style='background:white;border:1px solid #cbd5e1;padding:7px 13px;border-radius:8px;font-size:12px'>كل الأنواع</span><span style='background:white;border:1px solid #cbd5e1;padding:7px 13px;border-radius:8px;font-size:12px'>كل الألوان</span><span style='background:white;border:1px solid #cbd5e1;padding:7px 13px;border-radius:8px;font-size:12px'>كل المقاسات</span></div><div style='display:grid;grid-template-columns:1fr 1fr;gap:14px'><div style='background:white;border:1px solid #e2e8f0;border-radius:13px;padding:17px'><b>المخزون حسب النوع</b><div style='height:220px;display:flex;align-items:flex-end;gap:20px;padding:25px 20px 5px;border-bottom:1px solid #cbd5e1'><div style='width:42px;height:75%;background:#0ea5e9;border-radius:7px 7px 0 0'></div><div style='width:42px;height:55%;background:#8b5cf6;border-radius:7px 7px 0 0'></div><div style='width:42px;height:88%;background:#f59e0b;border-radius:7px 7px 0 0'></div><div style='width:42px;height:40%;background:#10b981;border-radius:7px 7px 0 0'></div></div></div><div style='background:white;border:1px solid #e2e8f0;border-radius:13px;padding:17px'><b>المخزون حسب اللون</b><div style='height:220px;display:flex;align-items:center;justify-content:center'><div style='width:155px;height:155px;border-radius:50%;background:conic-gradient(#2563eb 0 32%,#ef4444 32% 57%,#111827 57% 78%,#eab308 78%);position:relative'><div style='position:absolute;inset:38px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold'>2,460</div></div></div></div></div></div></div>"
+      },
+      "links": [
+        { "label": "العودة للوحة", "target": "dashboard" }
+      ]
+    },
+    {
+      "id": "transactions",
+      "title": "حركات المخزون",
+      "device": "desktop",
+      "description": "تسجيل ومراجعة حركات الوارد والصادر مع الكميات وأرقام الاسترجاع.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;color:#0f172a'><div style='max-width:980px;margin:auto'><div style='display:flex;justify-content:space-between;align-items:center;margin-bottom:18px'><div><h1 style='margin:0;font-size:24px'>حركات المخزون</h1><p style='color:#64748b;font-size:13px'>سجل عمليات الاستيراد والتصدير</p></div><div style='background:#0f172a;color:white;padding:9px 15px;border-radius:9px;font-size:13px'>تسجيل حركة جديدة</div></div><div style='background:white;border:1px solid #e2e8f0;border-radius:13px;overflow:hidden'><div style='display:grid;grid-template-columns:1.2fr 1fr .7fr .7fr 1fr;background:#f1f5f9;padding:12px 16px;font-size:12px;font-weight:bold'><span>المنتج</span><span>SKU</span><span>النوع</span><span>الكمية</span><span>التاريخ</span></div><div style='display:grid;grid-template-columns:1.2fr 1fr .7fr .7fr 1fr;padding:14px 16px;border-top:1px solid #e2e8f0;font-size:12px'><span>قميص رياضي أزرق</span><span>TS-BL-M</span><span style='color:#059669;font-weight:bold'>وارد</span><b>+50</b><span>19/10/2026</span></div><div style='display:grid;grid-template-columns:1.2fr 1fr .7fr .7fr 1fr;padding:14px 16px;border-top:1px solid #e2e8f0;font-size:12px'><span>بنطال أسود</span><span>TR-BK-L</span><span style='color:#dc2626;font-weight:bold'>صادر</span><b>-18</b><span>19/10/2026</span></div><div style='display:grid;grid-template-columns:1.2fr 1fr .7fr .7fr 1fr;padding:14px 16px;border-top:1px solid #e2e8f0;font-size:12px'><span>سترة شتوية</span><span>JK-GR-XL</span><span style='color:#059669;font-weight:bold'>وارد</span><b>+34</b><span>18/10/2026</span></div></div></div></div>"
+      },
+      "links": [
+        { "label": "العودة للوحة", "target": "dashboard" },
+        { "label": "فتح الاستيراد الجماعي", "target": "bulk-import" }
+      ]
+    },
+    {
+      "id": "bulk-import",
+      "title": "الاستيراد الجماعي",
+      "device": "desktop",
+      "description": "رفع ملف CSV ومعاينة صفوفه قبل استيراد الفرز المبدئي أو حركات المخزون.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;color:#0f172a'><div style='max-width:760px;margin:auto'><h1 style='margin:0;font-size:24px'>الاستيراد الجماعي</h1><p style='color:#64748b;font-size:13px;margin-bottom:18px'>رفع ملفات CSV لاستيراد البيانات</p><div style='background:white;border:1px solid #e2e8f0;border-radius:13px;padding:20px'><b>إعدادات الاستيراد</b><p style='color:#64748b;font-size:12px'>اختر نوع الاستيراد ثم ارفع الملف</p><label style='display:block;font-size:12px;font-weight:bold;margin:15px 0 6px'>نوع الاستيراد</label><div style='border:1px solid #cbd5e1;border-radius:8px;padding:10px;font-size:13px'>الحركات (استيراد / تصدير)</div><label style='display:block;font-size:12px;font-weight:bold;margin:15px 0 6px'>الملف</label><div style='border:2px dashed #cbd5e1;border-radius:10px;padding:28px;text-align:center;color:#64748b;font-size:13px'>اسحب ملف CSV هنا أو اضغط للاختيار</div><div style='margin-top:16px;background:#f8fafc;border-radius:9px;padding:12px'><b style='font-size:12px'>معاينة أول 5 صفوف</b><div style='display:grid;grid-template-columns:1fr 1fr 1fr;margin-top:9px;font-size:11px;color:#475569'><span>SKU</span><span>النوع</span><span>الكمية</span><span>TS-BL-M</span><span>IMPORT</span><span>50</span></div></div><div style='background:#0f172a;color:white;text-align:center;padding:10px;border-radius:8px;margin-top:16px;font-size:13px'>بدء الاستيراد</div></div></div></div>"
+      },
+      "links": [
+        { "label": "العودة للوحة", "target": "dashboard" },
+        { "label": "عرض الحركات", "target": "transactions" }
+      ]
+    }
+  ]
+}

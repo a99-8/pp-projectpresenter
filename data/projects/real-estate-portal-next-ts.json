@@ -1,0 +1,174 @@
+{
+  "slug": "real-estate-portal-next-ts",
+  "name": "بوابة العقارات Next",
+  "tagline": "بوابة Next.js لإدارة مهام وطلبات العقار مع إشعارات Web Push",
+  "description": "تطبيق ويب تفاعلي مبني بـ Next.js 16 وReact 19 لإدارة المهام اليومية وطلبات/عروض العقار. يدعم المصادقة المخصصة عبر Neon وNextAuth، إشعارات Web Push للأجهزة المسجلة، وتبديل اللغة والوضع الفاتح/الداكن. يوفر واجهة عربية RTL متجاوبة مع صفحات Dashboard وTasks وRequests.",
+  "source": "closed",
+  "type": "web",
+  "framework": {
+    "name": "Next.js",
+    "icon": "nextjs"
+  },
+  "stack": [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "Neon",
+    "Supabase",
+    "bcryptjs",
+    "next-themes",
+    "i18next",
+    "next-intl",
+    "web-push",
+    "next-auth"
+  ],
+  "storage": "cloud",
+  "status": "active",
+  "year": 2026,
+  "features": [
+    "صفحة تسجيل دخول مؤمنة مع التحقق من هوية المستخدم",
+    "لوحة تحكم تعرض بطاقات المهام والطلبات وإضافة طلب جديد",
+    "إدارة المهام اليومية مع أولويات (عاجلة، مهمة، عادية)",
+    "جدول الطلبات العقارية مع تفاصيل الميزانية والمواصفات",
+    "إضافة طلب عقاري جديد مع نوع العقار والحي والمساحة والسعر",
+    "إشعارات Web Push لتنبيه الأجهزة المسجلة عند إضافة مهمة أو طلب",
+    "تبديل اللغة العربية/الإنجليزية والوضع الفاتح/الداكن",
+    "واجهة RTL متجاوبة مبنية بـ Tailwind CSS"
+  ],
+  "highlights": [
+    "Next.js App Router مع Route Handlers لـ API وWeb Push",
+    "دعم إشعارات دفع فورية عبر Web Push API",
+    "تعدد اللغات بـ i18next وnext-intl",
+    "تصميم متجاوب مع Tailwind CSS ودعم الوضع الداكن"
+  ],
+  "challenges": [
+    {
+      "title": "تسجيل الأجهزة لإشعارات Web Push",
+      "problem": "يجب التحقق من اشتراك الجهاز الحالي وتفعيل الإشعارات بدون إعادة تحميل الصفحة.",
+      "solution": "استخدام hook مخصص (useWebPush) للتحقق من حالة الاشتراك وطلب التفعيل مع تحديث الحالة لحظياً."
+    },
+    {
+      "title": "توحيد المصادقة والبيانات",
+      "problem": "المستخدمون والمهام والطلبات يجب ربطها بحساب موحد وقاعدة بيانات موثوقة.",
+      "solution": "استخدام Neon PostgreSQL مع Supabase أو NextAuth لتسجيل الدخول وحفظ البيانات."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "الواجهة",
+        "nodes": [
+          {
+            "id": "app",
+            "label": "Next.js App Router",
+            "description": "Login، Dashboard، Tasks، Requests، AddRequest",
+            "icon": "web"
+          },
+          {
+            "id": "ui",
+            "label": "React Components",
+            "description": "TaskItem، RequestCard، Modals، Theme/Language Toggle",
+            "icon": "layout"
+          }
+        ]
+      },
+      {
+        "title": "المنطق",
+        "nodes": [
+          {
+            "id": "hooks",
+            "label": "Hooks مخصصة",
+            "description": "useAuthCheck، useTasks، useRequests، useWebPush",
+            "icon": "react"
+          },
+          {
+            "id": "api",
+            "label": "Route Handlers",
+            "description": "/tasks، /requests، /push/subscribe، /push/send",
+            "icon": "server"
+          }
+        ]
+      },
+      {
+        "title": "البيانات والخدمات",
+        "nodes": [
+          {
+            "id": "db",
+            "label": "Neon / Supabase",
+            "description": "تخزين المستخدمين والمهام والطلبات",
+            "icon": "cloud"
+          },
+          {
+            "id": "push",
+            "label": "Web Push",
+            "description": "اشتراكات الإشعارات وإرسال التنبيهات",
+            "icon": "bell"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      { "from": "app", "to": "ui", "label": "عرض" },
+      { "from": "app", "to": "hooks", "label": "قراءة/تعديل" },
+      { "from": "hooks", "to": "api", "label": "طلبات HTTP" },
+      { "from": "api", "to": "db", "label": "قراءة/كتابة" },
+      { "from": "api", "to": "push", "label": "إرسال إشعارات" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "login",
+      "title": "تسجيل الدخول",
+      "device": "desktop",
+      "description": "نموذج دخول يتحقق من المستخدم ثم يوجهه للوحة التحكم.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;display:flex;align-items:center;justify-content:center'><div style='background:white;border:1px solid #e2e8f0;border-radius:16px;padding:28px;width:100%;max-width:380px'><h2 style='margin:0 0 20px;text-align:center'>بوابة العقارات</h2><div style='background:#f1f5f9;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:13px;color:#475569'>اسم المستخدم</div><div style='background:#f1f5f9;border-radius:8px;padding:10px 12px;margin-bottom:18px;font-size:13px;color:#475569'>كلمة المرور</div><div style='background:#2563eb;color:white;text-align:center;padding:11px;border-radius:8px;font-weight:600'>دخول</div></div></div>"
+      },
+      "links": [
+        { "label": "لوحة التحكم", "target": "dashboard" }
+      ]
+    },
+    {
+      "id": "dashboard",
+      "title": "لوحة التحكم",
+      "device": "desktop",
+      "description": "بطاقات تنقل للمهام والطلبات مع إدارة حالة إشعارات الجهاز.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;color:#0f172a'><div style='max-width:900px;margin:auto'><h2 style='margin:0 0 8px'>لوحة التحكم</h2><p style='color:#64748b;margin-bottom:20px'>إدارة المهام والطلبات العقارية</p><div style='display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px'><div style='background:white;border:1px solid #e2e8f0;border-radius:14px;padding:18px'><div style='font-size:30px;margin-bottom:8px'>✅</div><b>المهام اليومية</b></div><div style='background:white;border:1px solid #e2e8f0;border-radius:14px;padding:18px'><div style='font-size:30px;margin-bottom:8px'>📋</div><b>جدول الطلبات</b></div><div style='background:white;border-top:4px solid #22c55e;border-radius:14px;padding:18px'><div style='font-size:30px;margin-bottom:8px'>➕</div><b>إضافة طلب</b></div></div><div style='background:white;border:1px solid #e2e8f0;border-radius:14px;padding:16px;display:flex;justify-content:space-between;align-items:center'><div><b>حالة الإشعارات</b><p style='color:#64748b;font-size:13px;margin:4px 0 0'>🟢 هذا الجهاز مسجل لتلقي الإشعارات</p></div><div style='background:#22c55e;color:white;padding:8px 14px;border-radius:8px;font-size:13px'>مفعّل</div></div></div></div>"
+      },
+      "links": [
+        { "label": "المهام", "target": "tasks" },
+        { "label": "الطلبات", "target": "requests" }
+      ]
+    },
+    {
+      "id": "tasks",
+      "title": "المهام اليومية",
+      "device": "desktop",
+      "description": "قائمة المهام مع فرز حسب الأولوية والتاريخ.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;color:#0f172a'><div style='max-width:700px;margin:auto'><h2 style='margin:0 0 16px'>المهام اليومية</h2><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px'><span>متابعة عرض عميل</span><span style='background:#dc2626;color:white;padding:4px 10px;border-radius:6px;font-size:12px'>عاجل</span></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center'><span>تحديث بيانات عقار</span><span style='background:#eab308;color:#222;padding:4px 10px;border-radius:6px;font-size:12px'>مهم</span></div></div></div>"
+      },
+      "links": [
+        { "label": "لوحة التحكم", "target": "dashboard" }
+      ]
+    },
+    {
+      "id": "requests",
+      "title": "جدول الطلبات",
+      "device": "desktop",
+      "description": "جدول يعرض كل الطلبات والعروض المسجلة.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;color:#0f172a'><div style='max-width:900px;margin:auto'><h2 style='margin:0 0 16px'>جدول الطلبات</h2><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden'><div style='display:grid;grid-template-columns:1fr 1fr 1fr 1fr;background:#f1f5f9;padding:12px;font-size:13px;font-weight:bold'><span>النوع</span><span>الحي</span><span>الميزانية</span><span>الهاتف</span></div><div style='display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:12px;font-size:13px;border-top:1px solid #e2e8f0'><span>شقة</span><span>الرياض</span><span>500,000 - 700,000</span><span>05xxxxxxx</span></div></div></div></div>"
+      },
+      "links": [
+        { "label": "لوحة التحكم", "target": "dashboard" }
+      ]
+    }
+  ]
+}

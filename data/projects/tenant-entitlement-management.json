@@ -1,0 +1,135 @@
+{
+  "slug": "tenant-entitlement-management",
+  "name": "إدارة استحقاقات المستأجرين",
+  "tagline": "نظام Nuxt UI لرفع ملفات Excel وتحويلها إلى جداول تفاعلية محلية",
+  "description": "تطبيق ويب عربي مبني بـ Nuxt 4 وNuxt UI 4 لإدارة بيانات استحقاقات المستأجرين. يتيح للمسؤول رفع ملف Excel وتحويل شيتاته إلى جداول تفاعلية، بينما يمكن للمستخدمين الفرعيين تعديل الشيتات الفرعية فقط وحفظ البيانات في localStorage. يدعم التصدير مرة أخرى إلى Excel وإدارة الصلاحيات ببساطة.",
+  "source": "closed",
+  "type": "web",
+  "framework": {
+    "name": "Nuxt",
+    "icon": "nuxt"
+  },
+  "stack": [
+    "Nuxt",
+    "Vue 3",
+    "TypeScript",
+    "Tailwind CSS",
+    "Nuxt UI",
+    "xlsx",
+    "Iconify"
+  ],
+  "storage": "local",
+  "status": "active",
+  "year": 2026,
+  "features": [
+    "تسجيل دخول محلي بأدوار (admin / user) مع نماذج جاهزة للتجربة",
+    "رفع ملف Excel وقراءة جميع الشيتات وعرضها كجداول تفاعلية",
+    "تعديل الخلايا مباشرة داخل الجدول للشيتات المسموح بها",
+    "الشيت الرئيسي للقراءة فقط للمستخدمين الفرعيين",
+    "إضافة صفوف جديدة وحذفها من الشيتات الفرعية",
+    "تصدير البيانات المعدّلة إلى ملف Excel جديد",
+    "حفظ البيانات في localStorage للاستمرار بين الجلسات",
+    "واجهة عربية RTL مبنية بمكونات Nuxt UI"
+  ],
+  "highlights": [
+    "لا حاجة لخادم أو قاعدة بيانات: كل البيانات تُحفظ في المتصفح",
+    "تحويل سريع لملفات Excel إلى جداول تفاعلية بواسطة xlsx",
+    "تحكم دقيق بالصلاحيات: الأدمن يعدّل كل الشيتات والمستخدم يعدّل الفرعية فقط",
+    "تصدير Excel للمشاركة أو الأرشفة"
+  ],
+  "challenges": [
+    {
+      "title": "قراءة وعرض شيتات Excel متعددة",
+      "problem": "ملف Excel قد يحتوي عدة شيتات بأعمدة متفاوتة ويجب عرضها ديناميكياً.",
+      "solution": "استخدام مكتبة xlsx لقراءة جميع الأوراق وتحويل كل منها إلى JSON ثم رسم الجدول حسب رؤوس الأعمدة ديناميكياً."
+    },
+    {
+      "title": "التحكم بالصلاحيات على مستوى الشيت",
+      "problem": "يجب منع المستخدمين الفرعيين من تعديل الشيت الرئيسي والسماح لهم بالشيتات الفرعية.",
+      "solution": "حساب canEditCurrentSheet بناءً على دور المستخدم واسم الشيت النشط، مع تعطيل حقول الإدخال تلقائياً."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "الواجهة",
+        "nodes": [
+          {
+            "id": "pages",
+            "label": "Nuxt Pages",
+            "description": "صفحة تسجيل الدخول ولوحة التحكم",
+            "icon": "web"
+          },
+          {
+            "id": "ui",
+            "label": "Nuxt UI Components",
+            "description": "بطاقات، أزرار، جداول تفاعلية",
+            "icon": "layout"
+          }
+        ]
+      },
+      {
+        "title": "المنطق",
+        "nodes": [
+          {
+            "id": "xlsx",
+            "label": "xlsx Parser",
+            "description": "قراءة وكتابة ملفات Excel",
+            "icon": "file"
+          },
+          {
+            "id": "auth",
+            "label": "مصادقة محلية",
+            "description": "التحقق من اسم المستخدم وكلمة المرور",
+            "icon": "lock"
+          }
+        ]
+      },
+      {
+        "title": "التخزين",
+        "nodes": [
+          {
+            "id": "storage",
+            "label": "localStorage",
+            "description": "حفظ بيانات المستخدم والشيتات محلياً",
+            "icon": "database"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      { "from": "pages", "to": "ui", "label": "عرض" },
+      { "from": "ui", "to": "xlsx", "label": "رفع/تصدير" },
+      { "from": "ui", "to": "auth", "label": "التحقق" },
+      { "from": "ui", "to": "storage", "label": "حفظ/قراءة" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "login",
+      "title": "تسجيل الدخول",
+      "device": "desktop",
+      "description": "نموذج دخول بسيط بأدوار admin/user.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;display:flex;align-items:center;justify-content:center'><div style='background:white;border:1px solid #e2e8f0;border-radius:16px;padding:28px;width:100%;max-width:380px'><h2 style='margin:0 0 8px;text-align:center'>إدارة استحقاقات المستأجرين</h2><p style='color:#64748b;font-size:13px;text-align:center;margin-bottom:20px'>تسجيل الدخول</p><div style='background:#f1f5f9;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:13px;color:#475569'>اسم المستخدم</div><div style='background:#f1f5f9;border-radius:8px;padding:10px 12px;margin-bottom:18px;font-size:13px;color:#475569'>كلمة المرور</div><div style='background:#0ea5e9;color:white;text-align:center;padding:11px;border-radius:8px;font-weight:600'>دخول</div></div></div>"
+      },
+      "links": [
+        { "label": "لوحة التحكم", "target": "dashboard" }
+      ]
+    },
+    {
+      "id": "dashboard",
+      "title": "لوحة إدارة المستأجرين",
+      "device": "desktop",
+      "description": "رفع Excel، التنقل بين الشيتات، تعديل البيانات، وتصديرها.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;color:#0f172a'><div style='max-width:900px;margin:auto'><h2 style='margin:0 0 8px'>لوحة إدارة استحقاقات المستأجرين</h2><p style='color:#64748b;margin-bottom:18px'>المستخدم: admin (كامل الصلاحيات)</p><div style='background:white;border:2px dashed #cbd5e1;border-radius:12px;padding:28px;text-align:center;margin-bottom:18px'><b>اختر ملف الإكسل</b><p style='font-size:13px;color:#64748b;margin-top:6px'>سيتم تحويل الشيتات إلى جداول تفاعلية</p></div><div style='display:flex;gap:8px;margin-bottom:14px'><span style='background:#0ea5e9;color:white;padding:6px 12px;border-radius:8px;font-size:13px'>الشيت الرئيسي</span><span style='background:#e2e8f0;padding:6px 12px;border-radius:8px;font-size:13px'>فرعي 1</span></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden'><div style='display:grid;grid-template-columns:1.5fr 1fr 1fr;background:#f1f5f9;padding:12px 16px;font-size:13px;font-weight:bold'><span>اسم المستأجر</span><span>الوحدة</span><span>المبلغ</span></div><div style='display:grid;grid-template-columns:1.5fr 1fr 1fr;padding:12px 16px;font-size:13px;border-top:1px solid #e2e8f0'><span>محمد علي</span><span>3A</span><span>12,000</span></div></div></div></div>"
+      },
+      "links": [
+        { "label": "تسجيل الخروج", "target": "login" }
+      ]
+    }
+  ]
+}

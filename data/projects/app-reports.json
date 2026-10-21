@@ -1,0 +1,140 @@
+{
+  "slug": "app-reports",
+  "name": "محاضر التسليم",
+  "tagline": "تطبيق Expo لإنشاء محاضر التسليم والصيانة وتصديرها PDF/Excel",
+  "description": "تطبيق جوال مبني بـ Expo وReact Native لإنشاء محاضر التسليم والصيانة للعقارات. يتيح إدخال بيانات المالك والمستأجر والوحدة والعدادات، إضافة بنود بأسعارها، حفظ المحاضر في قاعدة بيانات SQLite محلية، استعراض الأرشيف، وطباعة/مشاركة المحاضر بصيغ PDF أو Excel.",
+  "source": "closed",
+  "type": "mobile",
+  "framework": {
+    "name": "Expo",
+    "icon": "expo"
+  },
+  "stack": [
+    "Expo",
+    "React Native",
+    "Expo Router",
+    "TypeScript",
+    "expo-sqlite",
+    "react-native-html-to-pdf",
+    "AsyncStorage",
+    "expo-image",
+    "expo-sharing"
+  ],
+  "storage": "local",
+  "status": "active",
+  "year": 2026,
+  "features": [
+    "شاشة رئيسية للوصول السريع: محضر جديد، الأرشيف، طباعة PDF، طباعة Excel",
+    "إدخال بيانات المالك والمستأجر والوحدة والعقار ورقم عداد الكهرباء",
+    "إضافة بنود متعددة لكل محضر مع اسم البند والسعر وصورة",
+    "حفظ المحاضر محلياً في SQLite واستعراضها في شاشة الأرشيف",
+    "طباعة/مشاركة المحاضر بصيغة PDF",
+    "تصدير/مشاركة المحاضر بصيغة Excel",
+    "تصميم بسيط مع خلفية موحدة ومكونات إدخال متناسقة",
+    "تنقل سهل عبر شريط تبويبات سفلي"
+  ],
+  "highlights": [
+    "عمل كامل offline عبر SQLite محلي",
+    "توليد PDF مباشرة من المحتوى عبر react-native-html-to-pdf",
+    "أرشيف كامل للمحاضر السابقة مع إمكانية المراجعة",
+    "واجهة عربية بسيطة مناسبة للاستخدام الميداني"
+  ],
+  "challenges": [
+    {
+      "title": "إدارة بيانات المحضر الديناميكية",
+      "problem": "كل محضر يحتوي على حقول ثابتة وقائمة بنود متغيرة مع صور.",
+      "solution": "استخدام حالة React محلية لكل صفحة مع توليد UUID لكل بند وحفظ الجدول كاملاً في SQLite."
+    },
+    {
+      "title": "تصدير المحاضر إلى PDF وExcel",
+      "problem": "التصدير على الجوال يتطلب مكتبات أصلية أو تحويل HTML.",
+      "solution": "استخدام react-native-html-to-pdf لتوليد PDF وإعداد بنية بيانات مناسبة لتصدير Excel مستقبلاً."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "الواجهة",
+        "nodes": [
+          {
+            "id": "screens",
+            "label": "شاشات Expo Router",
+            "description": "Home، Input، Archive، Print، Settings",
+            "icon": "mobile"
+          },
+          {
+            "id": "components",
+            "label": "مكونات مشتركة",
+            "description": "ItemRow، MainInput، MainButton، Background",
+            "icon": "layout"
+          }
+        ]
+      },
+      {
+        "title": "التخزين",
+        "nodes": [
+          {
+            "id": "sqlite",
+            "label": "expo-sqlite",
+            "description": "حفظ المحاضر والبنود محلياً",
+            "icon": "database"
+          },
+          {
+            "id": "pdf",
+            "label": "HTML to PDF",
+            "description": "توليد وتصدير ملفات PDF",
+            "icon": "file"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      { "from": "screens", "to": "components", "label": "عرض وتفاعل" },
+      { "from": "screens", "to": "sqlite", "label": "حفظ/قراءة" },
+      { "from": "screens", "to": "pdf", "label": "تصدير" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "home",
+      "title": "الرئيسية",
+      "device": "mobile",
+      "description": "شاشة الترحيب مع أزرار الوصول إلى محضر جديد والأرشيف والطباعة.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f5f8fc;min-height:560px;padding:24px;color:#1a1a2e;display:flex;flex-direction:column;align-items:center'><div style='width:120px;height:120px;background:#e2e8f0;border-radius:50%;margin-bottom:40px;display:flex;align-items:center;justify-content:center;font-size:48px'>📋</div><h2 style='margin:0 0 20px'>محاضر التسليم</h2><div style='display:flex;flex-direction:column;gap:12px;width:100%;max-width:280px'><div style='background:#3b82f6;color:white;text-align:center;padding:14px;border-radius:10px;font-weight:600'>محضر جديد</div><div style='background:#22c55e;color:white;text-align:center;padding:14px;border-radius:10px;font-weight:600'>استعراض المحاضر</div><div style='background:#ef4444;color:white;text-align:center;padding:14px;border-radius:10px;font-weight:600'>طباعة PDF</div></div></div>"
+      },
+      "links": [
+        { "label": "محضر جديد", "target": "input" },
+        { "label": "الأرشيف", "target": "archive" }
+      ]
+    },
+    {
+      "id": "input",
+      "title": "إنشاء محضر",
+      "device": "mobile",
+      "description": "إدخال بيانات الأطراف والبنود مع إمكانية إرفاق صور.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f5f8fc;min-height:560px;padding:20px;color:#1a1a2e'><h2 style='margin:0 0 16px;text-align:center'>محضر جديد</h2><div style='display:flex;flex-direction:column;gap:10px'><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:12px'><small style='color:#6b7280'>المالك</small><div style='font-size:14px;margin-top:4px'>محمد علي</div></div><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:12px'><small style='color:#6b7280'>المستأجر</small><div style='font-size:14px;margin-top:4px'>علي محمد</div></div><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:12px'><small style='color:#6b7280'>الوحدة</small><div style='font-size:14px;margin-top:4px'>3 / C</div></div><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin-top:8px'><b>البنود</b><div style='display:flex;justify-content:space-between;margin-top:8px;font-size:13px'><span>مكيف</span><span>1,200 ر.س</span></div></div></div></div>"
+      },
+      "links": [
+        { "label": "الرئيسية", "target": "home" },
+        { "label": "الأرشيف", "target": "archive" }
+      ]
+    },
+    {
+      "id": "archive",
+      "title": "أرشيف المحاضر",
+      "device": "mobile",
+      "description": "عرض المحاضر السابقة المحفوظة محلياً.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f5f8fc;min-height:560px;padding:20px;color:#1a1a2e'><h2 style='margin:0 0 16px;text-align:center'>أرشيف المحاضر</h2><div style='display:flex;flex-direction:column;gap:10px'><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:12px'><b style='font-size:14px'>محضر تسليم #12</b><p style='color:#6b7280;font-size:12px;margin:4px 0 0'>19/10/2026 · الوحدة 3A</p></div><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:12px'><b style='font-size:14px'>محضر تسليم #11</b><p style='color:#6b7280;font-size:12px;margin:4px 0 0'>12/10/2026 · الوحدة B2</p></div></div></div>"
+      },
+      "links": [
+        { "label": "الرئيسية", "target": "home" }
+      ]
+    }
+  ]
+}

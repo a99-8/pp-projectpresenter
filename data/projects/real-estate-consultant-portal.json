@@ -1,0 +1,162 @@
+{
+  "slug": "real-estate-consultant-portal",
+  "name": "النظام العقاري الذكي",
+  "tagline": "بوابة Vue.js خفيفة لإدارة مهام وطلبات المستشار العقاري",
+  "description": "تطبيق ويب مبني بـ Vue 3 وVite وBootstrap 5/Bootstrap Vue Next لمساعدة المستشار العقاري على تسجيل الدخول، إدارة المهام اليومية، وعرض وإضافة طلبات/عروض العقار. يستخدم Supabase كقاعدة بيانات سحابية، ويوفر واجهة عربية RTL مع لوحة تحكم بسيطة وبطاقات تنقل سريع.",
+  "source": "closed",
+  "type": "web",
+  "framework": {
+    "name": "Vue.js",
+    "icon": "vue"
+  },
+  "stack": [
+    "Vue 3",
+    "Vue Router",
+    "TypeScript",
+    "Vite",
+    "Bootstrap 5",
+    "Bootstrap Vue Next",
+    "Supabase",
+    "Oxlint",
+    "Prettier"
+  ],
+  "storage": "cloud",
+  "status": "active",
+  "year": 2026,
+  "features": [
+    "تسجيل دخول محمي بالجلسة مع توجيه تلقائي للوحة التحكم",
+    "لوحة تحكم عقارية تعرض بطاقات للمهام والطلبات وإضافة طلب جديد",
+    "إدارة المهام اليومية مع ترتيب وفرز حسب الأهمية",
+    "جدول الطلبات والعروض العقارية مع التصفح والبحث",
+    "إضافة طلب/عرض عقاري جديد مع تفاصيل العميل والميزانية والمواصفات",
+    "واجهة عربية RTL متجاوبة مبنية بمكونات Bootstrap",
+    "نافذة تأكيد لتسجيل الخروج"
+  ],
+  "highlights": [
+    "بنية Vue 3 خفيفة مع Composition API وVite لتجربة تطوير سريعة",
+    "Supabase كنظام خلفي سحابي للمصادقة والبيانات",
+    "توجيه واضح بين صفحات Login وDashboard وTasks وRequests",
+    "واجهة عربية متناسقة باستخدام Bootstrap RTL"
+  ],
+  "challenges": [
+    {
+      "title": "إدارة حالة تسجيل الدخول عبر الجلسة",
+      "problem": "يحتاج التطبيق لحماية المسارات وتوجيه المستخدم حسب حالة تسجيل الدخول المخزنة في sessionStorage.",
+      "solution": "استخدام Vue Router Guards مع متابعة حالة sessionStorage عند تغير المسار وعرض نافذة تأكيد للخروج."
+    },
+    {
+      "title": "توحيد نمط البيانات بين المهام والطلبات",
+      "problem": "المهام والطلبات لها حقول مختلفة لكنها تشترك في عرض بطاقات وقوائم.",
+      "solution": "تصميم مكونات TaskItem وRequestCard منفصلة مع إعادة استخدام النافذة المنبثقة للتعديل."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "الواجهة",
+        "nodes": [
+          {
+            "id": "views",
+            "label": "Vue Views",
+            "description": "Login، Dashboard، Tasks، Requests، AddRequest",
+            "icon": "web"
+          },
+          {
+            "id": "components",
+            "label": "مكونات مشتركة",
+            "description": "TaskItem، RequestCard، Modals",
+            "icon": "layout"
+          }
+        ]
+      },
+      {
+        "title": "التوجيه والحالة",
+        "nodes": [
+          {
+            "id": "router",
+            "label": "Vue Router",
+            "description": "تعريف المسارات وحمايتها",
+            "icon": "route"
+          },
+          {
+            "id": "session",
+            "label": "sessionStorage",
+            "description": "حالة تسجيل الدخول والدور",
+            "icon": "lock"
+          }
+        ]
+      },
+      {
+        "title": "البيانات",
+        "nodes": [
+          {
+            "id": "supabase",
+            "label": "Supabase",
+            "description": "قاعدة بيانات سحابية للمهام والطلبات",
+            "icon": "cloud"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      { "from": "views", "to": "components", "label": "عرض" },
+      { "from": "router", "to": "session", "label": "التحقق من الدخول" },
+      { "from": "views", "to": "supabase", "label": "قراءة/كتابة" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "login",
+      "title": "تسجيل الدخول",
+      "device": "desktop",
+      "description": "نموذج دخول يتصل بـ Supabase Auth ويوجّه للوحة التحكم.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;display:flex;align-items:center;justify-content:center'><div style='background:white;border:1px solid #e2e8f0;border-radius:16px;padding:28px;width:100%;max-width:380px'><h2 style='margin:0 0 8px;text-align:center'>النظام العقاري الذكي</h2><p style='color:#64748b;font-size:13px;text-align:center;margin-bottom:20px'>تسجيل دخول المستشار</p><div style='background:#f1f5f9;border-radius:8px;padding:10px 12px;margin-bottom:14px;font-size:13px;color:#475569'>البريد الإلكتروني</div><div style='background:#f1f5f9;border-radius:8px;padding:10px 12px;margin-bottom:18px;font-size:13px;color:#475569'>كلمة المرور</div><div style='background:#0d6efd;color:white;text-align:center;padding:11px;border-radius:8px;font-weight:600'>دخول</div></div></div>"
+      },
+      "links": [
+        { "label": "لوحة التحكم", "target": "dashboard" }
+      ]
+    },
+    {
+      "id": "dashboard",
+      "title": "لوحة التحكم العقارية",
+      "device": "desktop",
+      "description": "ثلاث بطاقات تنقل للمهام اليومية وجدول الطلبات وإضافة عرض/طلب جديد.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;color:#0f172a'><div style='max-width:900px;margin:auto'><h2 style='margin:0 0 8px'>لوحة التحكم العقارية</h2><p style='color:#64748b;margin-bottom:24px'>أهلاً بك مجدداً! اختر الإجراء الذي ترغب في القيام به اليوم.</p><div style='display:grid;grid-template-columns:repeat(3,1fr);gap:16px'><div style='background:white;border:1px solid #e2e8f0;border-radius:16px;padding:20px;cursor:pointer'><div style='font-size:28px;margin-bottom:10px'>✅</div><b>المهام اليومية</b><p style='font-size:12px;color:#64748b;margin-top:6px'>تنظيم وتتبع المهام والأولويات</p></div><div style='background:white;border:1px solid #e2e8f0;border-radius:16px;padding:20px;cursor:pointer'><div style='font-size:28px;margin-bottom:10px'>📋</div><b>جدول الطلبات والعروض</b><p style='font-size:12px;color:#64748b;margin-top:6px'>استعراض كل البيانات المسجلة</p></div><div style='background:white;border-top:4px solid #198754;border-radius:16px;padding:20px;cursor:pointer'><div style='font-size:28px;margin-bottom:10px'>➕</div><b>إضافة طلب/عرض</b><p style='font-size:12px;color:#64748b;margin-top:6px'>تسجيل عرض عقاري جديد</p></div></div></div></div>"
+      },
+      "links": [
+        { "label": "المهام", "target": "tasks" },
+        { "label": "الطلبات", "target": "requests" }
+      ]
+    },
+    {
+      "id": "tasks",
+      "title": "المهام اليومية",
+      "device": "desktop",
+      "description": "قائمة المهام مع الفرز حسب الأولوية والتاريخ.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;color:#0f172a'><div style='max-width:700px;margin:auto'><h2 style='margin:0 0 16px'>المهام اليومية</h2><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px'><span>متابعة طلب عميل</span><span style='background:#dc3545;color:white;padding:4px 10px;border-radius:6px;font-size:12px'>عاجل</span></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px;display:flex;justify-content:space-between;align-items:center'><span>زيارة عقار جديد</span><span style='background:#ffc107;color:#222;padding:4px 10px;border-radius:6px;font-size:12px'>مهم</span></div></div></div>"
+      },
+      "links": [
+        { "label": "لوحة التحكم", "target": "dashboard" }
+      ]
+    },
+    {
+      "id": "requests",
+      "title": "جدول الطلبات",
+      "device": "desktop",
+      "description": "جدول يعرض كل الطلبات والعروض المسجلة في النظام.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:420px;padding:24px;color:#0f172a'><div style='max-width:900px;margin:auto'><h2 style='margin:0 0 16px'>جدول الطلبات</h2><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden'><div style='display:grid;grid-template-columns:1fr 1fr 1fr 1fr;background:#f1f5f9;padding:12px;font-size:13px;font-weight:bold'><span>النوع</span><span>الحي</span><span>الميزانية</span><span>الهاتف</span></div><div style='display:grid;grid-template-columns:1fr 1fr 1fr 1fr;padding:12px;font-size:13px;border-top:1px solid #e2e8f0'><span>شقة</span><span>الرياض</span><span>500,000 - 700,000</span><span>05xxxxxxx</span></div></div></div></div>"
+      },
+      "links": [
+        { "label": "لوحة التحكم", "target": "dashboard" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,193 @@
+{
+  "slug": "pp-projectpresenter",
+  "name": "PP | Project Presenter",
+  "tagline": "منصة معرض أعمال تفاعلية تُدار بالكامل من ملفات داخل المستودع",
+  "description": "موقع Portfolio عربي RTL مبني بـ Next.js 16 وReact 19 لتقديم المشاريع البرمجية بشكل تفاعلي. لا يحتوي على لوحة تحكم أو قاعدة بيانات؛ كل المحتوى يُقرأ من ملفات JSON/Markdown داخل `data/`. الصفحة الرئيسية تجمع بطلاً بتأثيرات إضاءة وإحصائيات، قسم «نبذة عني»، ومعرضاً تفاعلياً مصنّفاً حسب نوع المشروع (جوال، ويب، إضافة) يعرض كل مشروع داخل إطار جهاز يحاكي الحقيقي مع تنقّل دائري بين مشاريع النوع نفسه. صفحة المشروع التفصيلية تقدم وصف Markdown وخصائص ومميزات وتحديات وحلول ومخطط معمارية، وعارض شاشات ذكي يدعم HTML معقم وiframe حي وصورة وكود ملون بـ Shiki.",
+  "source": "open",
+  "repoUrl": "https://github.com/a99-8/pp-projectpresenter",
+  "type": "web",
+  "framework": {
+    "name": "Next.js",
+    "icon": "nextjs"
+  },
+  "stack": [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "next-themes",
+    "motion",
+    "react-markdown",
+    "gray-matter",
+    "shiki",
+    "DOMPurify",
+    "lucide-react",
+    "simple-icons",
+    "clsx",
+    "tailwind-merge"
+  ],
+  "storage": "none",
+  "status": "active",
+  "featured": true,
+  "year": 2026,
+  "features": [
+    "صفحة رئيسية مع بطل وتأثيرات إضاءة وشبكة خلفية وإحصائيات سريعة",
+    "قسم «نبذة عني» في الرئيسية يعرض الملف الشخصي ويوصّل لصفحته الكاملة",
+    "معرض تفاعلي مصنّف بالأنواع: تبويبات (جوال/ويب/إضافة) تعرض كل مشروع داخل إطار جهاز يحاكيه مع أزرار تنقّل دائرية بين مشاريع النوع",
+    "معرض مشاريع شامل بشبكة بطاقات مع بحث وتصفية حسب النوع والإطار والتخزين والمصدر",
+    "صفحة مشروع تفصيلية: وصف Markdown، خصائص، مميزات، تحديات وحلول، معمارية، وتنقّل بين المشاريع",
+    "عارض شاشات ذكي يدعم إطاري الجوال والمتصفح ونقاطاً ساخنة للتنقل بين الشاشات",
+    "أنواع محتوى متعددة للشاشات: HTML معقم، iframe حي، صورة، أو كود ملون بـ Shiki",
+    "صفحة نبذة عني تشمل الملف الشخصي والمهارات المصنّفة والروابط والجدول الزمني",
+    "وضع داكن/فاتح، واجهة عربية RTL كاملة، حركات ظهور تدريجية عبر motion"
+  ],
+  "highlights": [
+    "لا قاعدة بيانات ولا لوحة تحكم: المحتوى يُدار عبر ملفات JSON/Markdown في المستودع",
+    "تحقق عند قراءة البيانات يضمن صحة الحقول وروابط الشاشات ومعرّفات عقد المعمارية",
+    "عارض HTML آمن عبر DOMPurify داخل iframe sandbox بدون سكربتات",
+    "الشاشات تُجهَّز في الخادم: تلوين الكود بـ Shiki وتمرير بيانات جاهزة للعميل",
+    "أيقونات التقنيات تُستنتج تلقائياً من الأسماء عبر simple-icons وlucide",
+    "ميزات Next.js 16 الحديثة: cacheComponents وpartialPrefetching وreactCompiler"
+  ],
+  "challenges": [
+    {
+      "title": "عرض محتوى HTML آمن في العارض الذكي",
+      "problem": "محاكاة واجهات التطبيقات تتطلب HTML حراً قد يحتوي على سكربتات أو معالجات أحداث ضارة.",
+      "solution": "تطهير HTML بـ DOMPurify قبل العرض داخل iframe معزول بـ sandbox، مما يزيل السكربتات ومعالجات الأحداث."
+    },
+    {
+      "title": "إدارة المحتوى من ملفات دون قاعدة بيانات",
+      "problem": "يجب قراءة المشاريع والملف الشخصي من نظام الملفات وتقديمها بشكل ديناميكي مع تلوين الكود وتحويل Markdown.",
+      "solution": "طبقة بيانات في lib/data.ts تتحقق من كل مشروع وتخزنه مؤقتاً، وlib/screens.ts تجهّز الشاشات في الخادم وتلوّن الكود عبر Shiki."
+    },
+    {
+      "title": "تنسيق متناسق لعشرات المشاريع",
+      "problem": "كل مشروع يحتاج حقولاً متشابهة مع تفاصيل فنية متنوعة دون تكرار الكود.",
+      "solution": "تعريف schema موحد في data/PROJECT_SCHEMA.md ومكونات مشتركة للبطاقات والتفاصيل والمعمارية والعارض الذكي."
+    },
+    {
+      "title": "تجربة معاينة حية داخل الصفحة الرئيسية",
+      "problem": "إتاحة استكشاف المشاريع مباشرة من الرئيسية دون مغادرتها مع الحفاظ على أداء الصفحة.",
+      "solution": "مكوّن خادم داخل Suspense يجهّز شاشات كل المشاريع، ومكوّن عميل يدير تبويبات الأنواع والتنقل الدائري مع إعادة تركيب العارض عند تبديل المشروع."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "الواجهة",
+        "nodes": [
+          {
+            "id": "pages",
+            "label": "Next.js App Router",
+            "description": "الرئيسية، معرض المشاريع، صفحة المشروع، نبذة عني",
+            "icon": "web"
+          },
+          {
+            "id": "components",
+            "label": "مكونات مشتركة",
+            "description": "بطاقات، فلاتر، عارض شاشات، عارض رئيسي بالأنواع، مخطط معمارية، جدول زمني",
+            "icon": "layout"
+          }
+        ]
+      },
+      {
+        "title": "المحتوى",
+        "nodes": [
+          {
+            "id": "data",
+            "label": "ملفات data/",
+            "description": "profile.json ومشاريع JSON/Markdown",
+            "icon": "file"
+          },
+          {
+            "id": "parser",
+            "label": "gray-matter + react-markdown",
+            "description": "قراءة Frontmatter وتحويل Markdown",
+            "icon": "markdown"
+          }
+        ]
+      },
+      {
+        "title": "العرض المساعد",
+        "nodes": [
+          {
+            "id": "shiki",
+            "label": "Shiki",
+            "description": "تلوين مقتطفات الكود بأسلوب VS Code",
+            "icon": "code"
+          },
+          {
+            "id": "purify",
+            "label": "DOMPurify",
+            "description": "تطهير HTML للعارض الذكي",
+            "icon": "shield"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      { "from": "data", "to": "parser", "label": "قراءة وتحليل" },
+      { "from": "parser", "to": "pages", "label": "بيانات الصفحات" },
+      { "from": "components", "to": "pages", "label": "عرض" },
+      { "from": "shiki", "to": "components", "label": "كود ملون" },
+      { "from": "purify", "to": "components", "label": "HTML آمن" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "home",
+      "title": "الصفحة الرئيسية",
+      "device": "desktop",
+      "description": "بطل بتأثيرات إضاءة وإحصائيات، يليه قسم «نبذة عني» ثم المعرض التفاعلي المصنّف بالأنواع.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#0b1120;min-height:480px;padding:32px 20px;color:white;text-align:center'><span style='display:inline-block;border:1px solid #334155;border-radius:999px;padding:5px 14px;font-size:11px;color:#94a3b8'>✦ متاح لمشاريع جديدة</span><h1 style='font-size:30px;margin:16px 0 10px;line-height:1.5'>أعرض مشاريعي كما تستحق أن <b style='background:linear-gradient(90deg,#38bdf8,#818cf8);-webkit-background-clip:text;color:transparent'>تُعرَض</b></h1><p style='color:#94a3b8;max-width:460px;margin:0 auto 20px;font-size:14px'>مطوّر أبني منتجات رقمية من الفكرة حتى الإطلاق</p><div style='display:flex;justify-content:center;gap:10px;margin-bottom:26px'><span style='background:#38bdf8;color:#082f49;border-radius:10px;padding:9px 18px;font-size:13px;font-weight:700'>استعرض المشاريع</span><span style='border:1px solid #334155;border-radius:10px;padding:9px 18px;font-size:13px'>نبذة عني</span></div><div style='display:flex;justify-content:center;gap:12px;flex-wrap:wrap'><div style='background:#1e293b;padding:14px 22px;border-radius:14px;min-width:120px'><b style='font-size:20px;color:#38bdf8'>13+</b><p style='margin:4px 0 0;color:#94a3b8;font-size:12px'>مشروعاً معروضاً</p></div><div style='background:#1e293b;padding:14px 22px;border-radius:14px;min-width:120px'><b style='font-size:20px;color:#38bdf8'>7+</b><p style='margin:4px 0 0;color:#94a3b8;font-size:12px'>سنوات خبرة</p></div><div style='background:#1e293b;padding:14px 22px;border-radius:14px;min-width:120px'><b style='font-size:20px;color:#38bdf8'>8</b><p style='margin:4px 0 0;color:#94a3b8;font-size:12px'>إطاراً وتقنية</p></div></div></div>"
+      },
+      "links": [
+        { "label": "نبذة عني", "target": "about", "hotspot": { "x": 46, "y": 44, "w": 16, "h": 6 } },
+        { "label": "المعرض التفاعلي", "target": "showcase" }
+      ]
+    },
+    {
+      "id": "showcase",
+      "title": "المعرض التفاعلي",
+      "device": "desktop",
+      "description": "تبويبات أنواع المشاريع؛ كل نوع يعرض مشاريعه داخل إطار جهاز يحاكيه مع أزرار السابق/التالي.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:480px;padding:20px;color:#0f172a'><div style='max-width:860px;margin:auto'><div style='display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px'><span style='background:#0ea5e9;color:white;border-radius:999px;padding:8px 16px;font-size:13px;font-weight:700'>📱 تطبيق جوال (5)</span><span style='background:white;border:1px solid #e2e8f0;border-radius:999px;padding:8px 16px;font-size:13px'>🖥️ تطبيق ويب (7)</span><span style='background:white;border:1px solid #e2e8f0;border-radius:999px;padding:8px 16px;font-size:13px'>🧩 إضافة متصفح (1)</span></div><div style='display:flex;gap:20px;align-items:flex-start'><div style='width:180px;flex-shrink:0'><p style='font-size:11px;font-weight:700;color:#94a3b8;margin:0 0 8px'>شاشات المشروع</p><div style='background:#e0f2fe;border:1px solid #7dd3fc;border-radius:10px;padding:10px;font-size:12px;font-weight:700;margin-bottom:6px'>🌐 الرئيسية</div><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:10px;font-size:12px'>🖼️ المعرض</div></div><div style='flex:1;background:#18181b;border:9px solid #27272a;border-radius:24px;overflow:hidden;max-width:220px;margin:auto'><div style='background:#0ea5e9;height:200px;display:flex;align-items:center;justify-content:center;color:white;font-size:13px'>واجهة التطبيق</div></div></div><div style='text-align:center;margin-top:16px'><span style='display:inline-block;border:1px solid #e2e8f0;background:white;border-radius:10px;padding:8px 16px;font-size:13px;margin-left:8px'>→ السابق</span><span style='display:inline-block;background:#0ea5e9;color:white;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:700'>التالي ←</span></div></div></div>"
+      },
+      "links": [
+        { "label": "الرئيسية", "target": "home" },
+        { "label": "صفحة مشروع", "target": "project" }
+      ]
+    },
+    {
+      "id": "project",
+      "title": "صفحة المشروع",
+      "device": "desktop",
+      "description": "ترويسة بالشارات والتقنيات، خصائص ومميزات، عارض شاشات ذكي، ومخطط معمارية.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:480px;padding:24px;color:#0f172a'><div style='max-width:860px;margin:auto'><div style='display:flex;gap:14px;align-items:center;border-bottom:1px solid #e2e8f0;padding-bottom:18px'><div style='width:56px;height:56px;border-radius:14px;background:#e0f2fe;display:flex;align-items:center;justify-content:center;font-size:24px'>▲</div><div><h2 style='margin:0;font-size:22px'>PP | Project Presenter</h2><p style='margin:4px 0 0;color:#64748b;font-size:13px'>منصة معرض أعمال تفاعلية</p></div></div><div style='display:flex;gap:8px;flex-wrap:wrap;margin:14px 0'><span style='border:1px solid #e2e8f0;background:white;border-radius:999px;padding:5px 12px;font-size:11px'>Next.js</span><span style='border:1px solid #e2e8f0;background:white;border-radius:999px;padding:5px 12px;font-size:11px'>تطبيق ويب</span><span style='border:1px solid #e2e8f0;background:white;border-radius:999px;padding:5px 12px;font-size:11px'>مصدر مفتوح</span><span style='border:1px solid #e2e8f0;background:white;border-radius:999px;padding:5px 12px;font-size:11px'>2026</span></div><div style='display:grid;grid-template-columns:1fr 1fr;gap:12px'><div style='background:white;border:1px solid #e2e8f0;border-radius:14px;padding:14px'><b style='font-size:14px'>✅ خصائص المشروع</b><p style='font-size:12px;color:#64748b;margin:8px 0 0'>معرض تفاعلي • بحث وتصفية • عارض شاشات ذكي</p></div><div style='background:white;border:1px solid #e2e8f0;border-radius:14px;padding:14px'><b style='font-size:14px'>💡 مميزات المشروع</b><p style='font-size:12px;color:#64748b;margin:8px 0 0'>بلا قاعدة بيانات • HTML معقم • كود ملون</p></div></div></div></div>"
+      },
+      "links": [
+        { "label": "المعرض التفاعلي", "target": "showcase" },
+        { "label": "نبذة عني", "target": "about" }
+      ]
+    },
+    {
+      "id": "about",
+      "title": "نبذة عني",
+      "device": "desktop",
+      "description": "الملف الشخصي والروابط الاجتماعية، المهارات مصنّفة في أربع مجموعات، والجدول الزمني.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:480px;padding:24px;color:#0f172a'><div style='max-width:860px;margin:auto'><div style='display:flex;gap:16px;align-items:center'><div style='width:72px;height:72px;border-radius:20px;background:linear-gradient(135deg,#38bdf8,#818cf8);display:flex;align-items:center;justify-content:center;color:white;font-size:30px;font-weight:700'>ع</div><div><h2 style='margin:0;font-size:22px'>عبدالله</h2><p style='margin:4px 0 0;color:#0ea5e9;font-size:14px'>مطوّر برمجيات Full-Stack</p><p style='margin:6px 0 0;color:#64748b;font-size:12px'>📍 السعودية • 🟢 متاح لمشاريع جديدة</p></div></div><div style='display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:22px'><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:12px'><b style='font-size:12px;color:#0ea5e9'>الواجهات</b><p style='font-size:11px;color:#64748b;margin:6px 0 0'>Next.js • React • TS</p></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:12px'><b style='font-size:12px;color:#0ea5e9'>الخلفية</b><p style='font-size:11px;color:#64748b;margin:6px 0 0'>Node • PostgreSQL</p></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:12px'><b style='font-size:12px;color:#0ea5e9'>الجوال</b><p style='font-size:11px;color:#64748b;margin:6px 0 0'>Flutter • RN</p></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:12px'><b style='font-size:12px;color:#0ea5e9'>الأدوات</b><p style='font-size:11px;color:#64748b;margin:6px 0 0'>Docker • Firebase</p></div></div><div style='margin-top:20px;border-right:2px solid #e2e8f0;padding-right:16px'><p style='margin:0 0 10px;font-size:12px'><b style='color:#0ea5e9'>2019</b> — بداية الرحلة</p><p style='margin:0 0 10px;font-size:12px'><b style='color:#0ea5e9'>2023</b> — العمل الحر والمنتجات</p><p style='margin:0;font-size:12px'><b style='color:#0ea5e9'>2025</b> — أدوات المطورين وPP</p></div></div></div>"
+      },
+      "links": [
+        { "label": "الرئيسية", "target": "home" }
+      ]
+    }
+  ]
+}

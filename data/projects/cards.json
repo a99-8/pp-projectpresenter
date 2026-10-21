@@ -1,0 +1,216 @@
+{
+  "slug": "cards",
+  "name": "حاسبة الألعاب",
+  "tagline": "رفيق جوال عربي لألعاب الورق: شروحات تفاعلية، حاسبة نقاط، وأدوات مساعدة",
+  "description": "تطبيق جوال مبني بـ Expo وReact Native لمحبي ألعاب الورق والجلسات. يجلب شروحات الألعاب ومعلوماتها من مستودعات GitHub بصيغة JSON مخصصة، ويقدم دليلاً تفاعلياً واختباراً للقواعد، ثم ينتقل بحساب النقاط لفردي أو فرقي مع سجل الجولات ومشاركة كرت النتيجة. يتضمن أيضاً صندوق أدوات مساعدة: حاسبة نقاط عامة، رمي نرد، سحب بطاقات عشوائية، ومجموعات أسئلة قابلة للنسخ.",
+  "source": "open",
+  "repoUrl": "https://github.com/a99-8/cards",
+  "type": "mobile",
+  "framework": {
+    "name": "Expo",
+    "icon": "expo"
+  },
+  "stack": [
+    "Expo",
+    "React Native",
+    "Expo Router",
+    "TypeScript",
+    "NativeWind",
+    "Zustand",
+    "Zod",
+    "AsyncStorage",
+    "MMKV",
+    "i18next",
+    "react-native-reanimated",
+    "lucide-react-native",
+    "react-native-paper"
+  ],
+  "storage": "local",
+  "status": "active",
+  "year": 2026,
+  "features": [
+    "قائمة ألعاب قابلة للتوسع تُجلب من مستودعات GitHub بصيغة JSON موحدة",
+    "فلترة وبحث وترتيب الألعاب حسب الاسم أو الوقت أو الهدف أو عدد اللاعبين",
+    "دليل تفاعلي لكل لعبة مع بطاقات الأرض واليد واختيار اللعب الصحيح",
+    "اختبار قواعد (Quiz) للتأكد من فهم القوانين قبل بدء اللعب",
+    "حاسبة نقاط تدعم الوضع الفردي والفريقي مع تاريخ الجولات والتراجع",
+    "مساعد اختيار اللعبة بناءً على عدد اللاعبين والوقت المتاح",
+    "ألعاب مفضلة وسجل ألعاب جارية يُحفظان محلياً",
+    "مجموعات لاعبين مخصصة مع فرق عشوائية وموزعة بالتساوي",
+    "أدوات مساعدة: حاسبة نقاط عامة حتى 8 لاعبين، رمي نرد، سحب بطاقات، مجموعات أسئلة",
+    "دعم كامل للعربية وRTL والوضع الفاتح والداكن مع Haptics"
+  ],
+  "highlights": [
+    "لا حاجة لخادم: الألعاب تُجلب من ملفات JSON في مستودعات GitHub وتُخزن محلياً",
+    "تحقق صارم من ملفات الألعاب باستخدام Zod مع تقارير أخطاء مفصلة لكل ملف",
+    "تجربة تعليمية تفاعلية: دليل مرئي + اختبار للقواعد قبل بدء الجلسة",
+    "مشاركة كرت النتيجة كصورة بعد انتهاء المباراة",
+    "تصميم مرن يدعم اللغتين وRTL والوضع الداكن عبر NativeWind"
+  ],
+  "challenges": [
+    {
+      "title": "تحميل الألعاب من مستودعات GitHub والتحقق منها",
+      "problem": "يجلب التطبيق ملفات JSON متعددة من GitHub API ومن ثم raw، وكل ملف قد يحتوي أخطاء في القواعد أو بنية غير صحيحة. التحميل يحتاج إلى متابعة التقدم ومعالجة الفشل الجزئي.",
+      "solution": "استخدام GitHub Trees API لجلب قائمة الملفات، ثم تحميل كل ملف عبر raw.githubusercontent.com وتمريره على مخطط Zod. تُجمّع الأخطاء لكل ملف وتُعرض في إحصائيات المستودع، والألعاب الصالحة فقط تُحفظ محلياً."
+    },
+    {
+      "title": "نمذجة القواعد لألعاب الورق المتنوعة",
+      "problem": "ألعاب الورق تختلف في عدد اللاعبين، عدد الكوتشينات، الجواكر، طريقة التوزيع، احتساب النقاط، والتعامل الفردي مقابل الفريقي.",
+      "solution": "تصميم مخطط JSON موحد (gameRulesConfig) يغطي quickActions، specialRules، rankings، interactiveGuide، quiz، والوضع الفردي. يُخزّن كل لعبة ككيان مستقل ويتم عرضها حسب نوعها."
+    },
+    {
+      "title": "إدارة حالة الجلسة والتراجع عن الجولات",
+      "problem": "أثناء اللعب يجب إضافة نقاط، حساب الرصيد التراكمي، تحديد الفائز، والتراجع عن آخر جولة دون إفساد باقي البيانات.",
+      "solution": "استخدام Zustand لحالة الجلسة مع سجل كامل لكل جولة (scores + accumulatedScores). عند التراجع تُعاد حساب الدرجات من السجل بعد إزالة آخر جولة وتُحفظ في AsyncStorage."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "الواجهة",
+        "nodes": [
+          {
+            "id": "screens",
+            "label": "شاشات Expo Router",
+            "description": "الرئيسية، قائمة الألعاب، القواعد، الحاسبة، الأدوات، الإعدادات",
+            "icon": "mobile"
+          },
+          {
+            "id": "components",
+            "label": "مكونات مشتركة",
+            "description": "بطاقات، نوافذ منبثقة، جداول، أزرار سريعة، دعم RTL",
+            "icon": "layout"
+          }
+        ]
+      },
+      {
+        "title": "المنطق",
+        "nodes": [
+          {
+            "id": "stores",
+            "label": "Zustand Stores",
+            "description": "حالة الألعاب والجلسات والمجموعات",
+            "icon": "react"
+          },
+          {
+            "id": "engines",
+            "label": "محركات الألعاب",
+            "description": "tutorialEngine، quizEngine، sessionUtils، gameSchema",
+            "icon": "cpu"
+          }
+        ]
+      },
+      {
+        "title": "البيانات والشبكة",
+        "nodes": [
+          {
+            "id": "github",
+            "label": "GitHub API",
+            "description": "جلب مستودعات الألعاب وتخزينها محلياً",
+            "icon": "github"
+          },
+          {
+            "id": "storage",
+            "label": "AsyncStorage / MMKV",
+            "description": "حفظ الألعاب والجلسات والمفضلة والإعدادات",
+            "icon": "database"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      { "from": "screens", "to": "components", "label": "عرض وتفاعل" },
+      { "from": "screens", "to": "stores", "label": "قراءة/تعديل الحالة" },
+      { "from": "stores", "to": "engines", "label": "تحقق وحساب" },
+      { "from": "stores", "to": "storage", "label": "حفظ محلي" },
+      { "from": "github", "to": "stores", "label": "مزامنة الألعاب" },
+      { "from": "engines", "to": "screens", "label": "عرض نتيجة" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "home",
+      "title": "الرئيسية",
+      "device": "mobile",
+      "description": "القائمة الرئيسية للوصول إلى قائمة الألعاب، المفضلة، الألعاب الجارية، أدوات المساعدة، والإعدادات.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:560px;padding:18px;color:#0f172a'><h2 style='text-align:center;margin:0 0 24px;color:#0284c7'>حاسبة الألعاب</h2><div style='display:flex;flex-direction:column;gap:12px'><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:14px;display:flex;align-items:center;gap:10px;box-shadow:0 1px 2px rgba(0,0,0,.04)'><span style='width:32px;height:32px;background:#0284c720;border-radius:8px;display:flex;align-items:center;justify-content:center'>📋</span><span style='font-weight:600'>قائمة الألعاب</span></div><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:14px;display:flex;align-items:center;gap:10px'><span style='width:32px;height:32px;background:#ef444420;border-radius:8px;display:flex;align-items:center;justify-content:center'>❤️</span><span style='font-weight:600'>المفضلة</span></div><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:14px;display:flex;align-items:center;gap:10px'><span style='width:32px;height:32px;background:#f59e0b20;border-radius:8px;display:flex;align-items:center;justify-content:center'>🔄</span><span style='font-weight:600'>الألعاب الجارية</span></div><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:14px;display:flex;align-items:center;gap:10px'><span style='width:32px;height:32px;background:#8b5cf620;border-radius:8px;display:flex;align-items:center;justify-content:center'>🛠️</span><span style='font-weight:600'>أدوات مساعدة</span></div><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:14px;display:flex;align-items:center;gap:10px'><span style='width:32px;height:32px;background:#64748b20;border-radius:8px;display:flex;align-items:center;justify-content:center'>⚙️</span><span style='font-weight:600'>الإعدادات</span></div></div></div>"
+      },
+      "links": [
+        { "label": "قائمة الألعاب", "target": "games-list" },
+        { "label": "أدوات مساعدة", "target": "tools-hub" },
+        { "label": "الإعدادات", "target": "settings" }
+      ]
+    },
+    {
+      "id": "games-list",
+      "title": "قائمة الألعاب",
+      "device": "mobile",
+      "description": "عرض الألعاب المتاحة مع البحث والترتيب وإمكانية تفضيل اللعبة أو فتح شرحها أو بدء حساب النقاط.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:560px;padding:18px;color:#0f172a'><h2 style='margin:0 0 12px;font-size:16px'>قائمة الألعاب</h2><div style='background:white;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;margin-bottom:12px;color:#64748b;font-size:13px'>🔍 ابحث عن لعبة...</div><div style='display:flex;gap:8px;margin-bottom:14px'><span style='background:#0284c7;color:white;border-radius:6px;padding:4px 10px;font-size:11px'>الاسم</span><span style='background:#f1f5f9;border-radius:6px;padding:4px 10px;font-size:11px'>الوقت</span><span style='background:#f1f5f9;border-radius:6px;padding:4px 10px;font-size:11px'>الهدف</span></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px;box-shadow:0 1px 2px rgba(0,0,0,.04)'><div style='height:80px;background:#0f172a;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-weight:bold;margin-bottom:10px'>بلوت</div><div style='display:flex;justify-content:space-between;align-items:center'><b>بلوت</b><span style='font-size:12px;color:#64748b'>⭐</span></div><div style='font-size:12px;color:#64748b;margin:6px 0'>4 لاعبين • الهدف: 152 نقطة</div><div style='display:flex;gap:8px;margin:10px 0'><span style='background:#f1f5f9;border-radius:4px;padding:2px 8px;font-size:11px'>1 شدة</span><span style='background:#f1f5f9;border-radius:4px;padding:2px 8px;font-size:11px'>52 ورقة</span><span style='background:#f1f5f9;border-radius:4px;padding:2px 8px;font-size:11px'>45 دقيقة</span></div><div style='display:flex;gap:8px'><button style='flex:2;background:#0284c7;color:white;border:none;border-radius:6px;padding:8px 0;font-weight:600'>بدء الحاسبة</button><button style='flex:1;background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:8px 0'>الشرح</button></div></div></div>"
+      },
+      "links": [
+        { "label": "بدء الحاسبة", "target": "game-session" },
+        { "label": "الشرح", "target": "game-rules" },
+        { "label": "العودة للرئيسية", "target": "home" }
+      ]
+    },
+    {
+      "id": "game-rules",
+      "title": "شرح اللعبة",
+      "device": "mobile",
+      "description": "تبويبات تعرض دليلاً تفاعلياً للعب، قواعد التوزيع والنقاط، ترتيب البطاقات، واختبار قواعد اللعبة.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:560px;padding:18px;color:#0f172a'><h2 style='margin:0 0 12px'>شرح بلوت</h2><div style='display:flex;gap:8px;margin-bottom:14px;border-bottom:1px solid #e2e8f0;padding-bottom:8px'><span style='color:#0284c7;font-weight:600;border-bottom:2px solid #0284c7;padding-bottom:6px'>الدليل</span><span style='color:#64748b;font-size:13px;padding-bottom:6px'>القواعد</span><span style='color:#64748b;font-size:13px;padding-bottom:6px'>البطاقات</span><span style='color:#64748b;font-size:13px;padding-bottom:6px'>اختبار</span></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px'><p style='font-size:13px;color:#334155;margin:0 0 12px'>تابع لون البطاقة المفتوحة ثم قارن القوة والحكم.</p><div style='font-size:12px;color:#64748b;margin-bottom:10px'>يد اللاعب</div><div style='display:flex;gap:8px;margin-bottom:14px'><div style='width:40px;height:56px;background:#dbeafe;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px'>♠️</div><div style='width:40px;height:56px;background:#fee2e2;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px'>♥️</div><div style='width:40px;height:56px;background:#dbeafe;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px;border:2px solid #0284c7'>♣️</div></div><div style='font-size:12px;color:#64748b;margin-bottom:10px'>الأرض</div><div style='display:flex;gap:8px;margin-bottom:14px'><div style='width:40px;height:56px;background:#fef3c7;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:18px'>♦️</div></div><button style='width:100%;background:#0284c7;color:white;border:none;border-radius:8px;padding:10px;font-weight:600'>اختر البطاقة الصحيحة</button></div></div>"
+      },
+      "links": [
+        { "label": "بدء الحاسبة", "target": "game-session" },
+        { "label": "العودة للقائمة", "target": "games-list" }
+      ]
+    },
+    {
+      "id": "game-session",
+      "title": "حاسبة النقاط",
+      "device": "mobile",
+      "description": "شاشة اللعب الرئيسية: جدول الترتيب، إدخال النقاط، الأزرار السريعة، سجل الجولات، ومشاركة النتيجة.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:560px;padding:18px;color:#0f172a'><h2 style='margin:0 0 12px'>بلوت</h2><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:12px'><table style='width:100%;font-size:13px'><tr style='color:#64748b'><th style='text-align:right'>الفريق</th><th>النقاط</th></tr><tr><td style='padding:8px 0;display:flex;align-items:center;gap:8px'><span style='width:10px;height:10px;border-radius:50%;background:#0284c7'></span>الفريق الأول</td><td style='text-align:center;font-weight:600'>26</td></tr><tr><td style='padding:8px 0;display:flex;align-items:center;gap:8px'><span style='width:10px;height:10px;border-radius:50%;background:#ef4444'></span>الفريق الثاني</td><td style='text-align:center;font-weight:600'>13</td></tr></table></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:12px'><div style='font-size:13px;font-weight:600;margin-bottom:10px'>إضافة نقاط سريعة</div><div style='display:grid;grid-template-columns:repeat(3,1fr);gap:8px'><button style='background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:8px'>+5</button><button style='background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:8px'>+10</button><button style='background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:8px'>+13</button><button style='background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:8px'>سنة</button><button style='background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:8px'>مشركة</button><button style='background:#f1f5f9;border:1px solid #e2e8f0;border-radius:6px;padding:8px'>خمسين</button></div></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px'><div style='font-size:13px;font-weight:600;margin-bottom:10px'>سجل الجولات</div><div style='display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid #f1f5f9'><span>الجولة 1</span><span>13 - 0</span></div><div style='display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid #f1f5f9'><span>الجولة 2</span><span>13 - 13</span></div></div></div>"
+      },
+      "links": [
+        { "label": "العودة للقائمة", "target": "games-list" },
+        { "label": "الشرح", "target": "game-rules" }
+      ]
+    },
+    {
+      "id": "tools-hub",
+      "title": "أدوات مساعدة",
+      "device": "mobile",
+      "description": "صندوق أدوات يحتوي على حاسبة نقاط عامة، رمي النرد، سحب بطاقات عشوائية، ومجموعات أسئلة قابلة للنسخ.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:560px;padding:18px;color:#0f172a'><h2 style='margin:0 0 8px'>أدوات مساعدة</h2><p style='font-size:13px;color:#64748b;margin:0 0 16px'>اختر الأدوات التي تحتاجها للعبتك الآن</p><div style='display:flex;flex-direction:column;gap:12px'><div style='background:white;border:1px solid #e2e8f0;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px'><div style='width:54px;height:54px;background:#6200ee;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-size:22px'>🧮</div><div style='flex:1'><b>حاسبة النقاط</b><p style='font-size:12px;color:#64748b;margin:4px 0 0'>حساب النقاط حتى 8 لاعبين</p></div><span style='color:#94a3b8'>›</span></div><div style='background:white;border:1px solid #e2e8f0;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px'><div style='width:54px;height:54px;background:#10b981;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-size:22px'>🎲</div><div style='flex:1'><b>رمي النرد</b><p style='font-size:12px;color:#64748b;margin:4px 0 0'>رمي حتى 8 أنرد مع أنيميشن</p></div><span style='color:#94a3b8'>›</span></div><div style='background:white;border:1px solid #e2e8f0;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px'><div style='width:54px;height:54px;background:#f59e0b;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-size:22px'>🃏</div><div style='flex:1'><b>سحب البطاقات</b><p style='font-size:12px;color:#64748b;margin:4px 0 0'>سحب بطاقة عشوائية مع تحديد المجموعات</p></div><span style='color:#94a3b8'>›</span></div><div style='background:white;border:1px solid #e2e8f0;border-radius:14px;padding:14px;display:flex;align-items:center;gap:12px'><div style='width:54px;height:54px;background:#8b5cf6;border-radius:12px;display:flex;align-items:center;justify-content:center;color:white;font-size:22px'>❓</div><div style='flex:1'><b>مجموعات الأسئلة</b><p style='font-size:12px;color:#64748b;margin:4px 0 0'>إدارة وتخزين مجموعات الأسئلة لنسخها</p></div><span style='color:#94a3b8'>›</span></div></div></div>"
+      },
+      "links": [
+        { "label": "العودة للرئيسية", "target": "home" }
+      ]
+    },
+    {
+      "id": "settings",
+      "title": "الإعدادات",
+      "device": "mobile",
+      "description": "إدارة المظهر واللغة ومستودعات الألعاب ومجموعات اللاعبين.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f8fafc;min-height:560px;padding:18px;color:#0f172a'><h2 style='margin:0 0 16px'>الإعدادات</h2><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:12px'><b style='font-size:14px;display:block;margin-bottom:10px'>المظهر واللغة</b><div style='display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f1f5f9'><span>الوضع الداكن</span><span style='width:40px;height:22px;background:#0284c7;border-radius:11px;position:relative'><span style='position:absolute;right:2px;top:2px;width:18px;height:18px;background:white;border-radius:50%'></span></span></div><div style='display:flex;justify-content:space-between;align-items:center;padding:8px 0'><span>اللغة</span><span style='color:#64748b;font-size:13px'>العربية ›</span></div></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px;margin-bottom:12px'><b style='font-size:14px;display:block;margin-bottom:10px'>مستودعات الألعاب</b><div style='display:flex;gap:8px;margin-bottom:10px'><input style='flex:1;border:1px solid #e2e8f0;border-radius:8px;padding:8px;font-size:13px' placeholder='رابط GitHub للمستودع...' value='https://github.com/a99-8/constants-games.git' readonly><button style='background:#0284c7;color:white;border:none;border-radius:8px;padding:8px 12px;font-size:13px'>إضافة</button></div><div style='font-size:12px;color:#64748b;padding:6px 0'>constants-games.git • 12 لعبة</div></div><div style='background:white;border:1px solid #e2e8f0;border-radius:12px;padding:14px'><b style='font-size:14px;display:block;margin-bottom:10px'>مجموعات اللاعبين</b><div style='display:flex;justify-content:space-between;align-items:center;padding:6px 0'><span>العائلة</span><span style='color:#0284c7;font-size:12px'>مختارة</span></div><div style='display:flex;justify-content:space-between;align-items:center;padding:6px 0'><span>الأصدقاء</span><span style='color:#64748b;font-size:12px'>اختيار</span></div></div></div>"
+      },
+      "links": [
+        { "label": "العودة للرئيسية", "target": "home" }
+      ]
+    }
+  ]
+}

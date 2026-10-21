@@ -1,0 +1,125 @@
+{
+  "slug": "rent-table",
+  "name": "جدول الإيجار والدفعات",
+  "tagline": "تطبيق Expo لحساب تكاليف الإيجار وتوزيع الدفعات ومشاركة الجدول",
+  "description": "تطبيق جوال مبني بـ Expo وReact Native لحساب تكاليف الإيجار السكني. يتيح إدخال قيمة الإيجار والضريبة والتأمين والمياه والعمولة، ثم يحسب المجموع ويوزعه على عدد الدفعات المختار (شهرية/نصف شهرية/ربع سنوية). يدعم حفظ البيانات محلياً ومشاركة جدول الدفعات كصورة.",
+  "source": "closed",
+  "type": "mobile",
+  "framework": {
+    "name": "Expo",
+    "icon": "expo"
+  },
+  "stack": [
+    "Expo",
+    "React Native",
+    "TypeScript",
+    "AsyncStorage",
+    "react-native-view-shot",
+    "expo-sharing",
+    "expo-media-library",
+    "react-native-safe-area-context"
+  ],
+  "storage": "local",
+  "status": "active",
+  "year": 2026,
+  "features": [
+    "إدخال قيمة الإيجار واختيار تطبيق ضريبة القيمة المضافة 15%",
+    "إضافة تأمين، مياه، وعمولة إيجار قابلة للتخصيص",
+    "اختيار تكرار الدفع: شهري، نصف شهري، ربع سنوي",
+    "حساب المجموع الكلي وتفاصيل كل دفعة",
+    "حفظ البيانات تلقائياً في AsyncStorage",
+    "التقاط صورة للجدول ومشاركتها عبر واتساب"
+  ],
+  "highlights": [
+    "واجهة بسيطة وسريعة لحساب تكاليف الإيجار",
+    "مشاركة الجدول كصورة عبر react-native-view-shot وexpo-sharing",
+    "حسابات دقيقة للضرائب والعمولات والتقسيط",
+    "عمل offline بدون خادم"
+  ],
+  "challenges": [
+    {
+      "title": "حساب التكاليف حسب خيارات متعددة",
+      "problem": "يجب دعم ضريبة إيجار اختيارية، عمولة افتراضية أو مخصصة، وتكرار دفع مختلف.",
+      "solution": "دوال calculations.ts مركزية تأخذ RentFormData وتُرجح الإجمالي والتقسيم حسب frequency."
+    },
+    {
+      "title": "مشاركة الجدول كصورة",
+      "problem": "المستخدمين يريدون إرسال الجدول مباشرة عبر تطبيقات الدردشة.",
+      "solution": "استخدام ViewShot لتصوير الجدول ثم Sharing.shareAsync مع mimeType image/png."
+    }
+  ],
+  "architecture": {
+    "layers": [
+      {
+        "title": "الواجهة",
+        "nodes": [
+          {
+            "id": "home",
+            "label": "HomeScreen",
+            "description": "الشاشة الرئيسية والجدول",
+            "icon": "mobile"
+          },
+          {
+            "id": "components",
+            "label": "مكونات",
+            "description": "InputForm، SummaryTable، PaymentsTable",
+            "icon": "layout"
+          }
+        ]
+      },
+      {
+        "title": "المنطق",
+        "nodes": [
+          {
+            "id": "calc",
+            "label": "calculations",
+            "description": "حساب الإجمالي وتقسيم الدفعات",
+            "icon": "calculator"
+          },
+          {
+            "id": "storage",
+            "label": "AsyncStorage",
+            "description": "حفظ واسترجاع بيانات النموذج",
+            "icon": "database"
+          }
+        ]
+      },
+      {
+        "title": "المشاركة",
+        "nodes": [
+          {
+            "id": "viewshot",
+            "label": "react-native-view-shot",
+            "description": "التقاط صورة للجدول",
+            "icon": "camera"
+          },
+          {
+            "id": "sharing",
+            "label": "expo-sharing",
+            "description": "مشاركة الصورة عبر التطبيقات",
+            "icon": "share"
+          }
+        ]
+      }
+    ],
+    "flows": [
+      { "from": "home", "to": "components", "label": "عرض" },
+      { "from": "components", "to": "calc", "label": "إدخال" },
+      { "from": "components", "to": "storage", "label": "حفظ" },
+      { "from": "home", "to": "viewshot", "label": "التقاط" },
+      { "from": "viewshot", "to": "sharing", "label": "مشاركة" }
+    ]
+  },
+  "screens": [
+    {
+      "id": "home",
+      "title": "حاسبة الإيجار",
+      "device": "mobile",
+      "description": "إدخال بيانات الإيجار وعرض ملخص التكاليف وجدول الدفعات.",
+      "content": {
+        "type": "html",
+        "html": "<div dir='rtl' style='font-family:system-ui;background:#f5f5f5;min-height:560px;padding:20px;color:#222'><h2 style='margin:0 0 16px;text-align:center'>جدول الإيجار والدفعات</h2><div style='background:white;border-radius:12px;padding:16px;margin-bottom:14px'><div style='margin-bottom:10px'><small style='color:#666'>قيمة الإيجار</small><div style='font-size:16px;font-weight:600'>45,000 ر.س</div></div><div style='display:flex;gap:10px;margin-bottom:10px'><div style='flex:1'><small style='color:#666'>التأمين</small><div style='font-size:14px'>2,000</div></div><div style='flex:1'><small style='color:#666'>المياه</small><div style='font-size:14px'>500</div></div></div><div style='margin-bottom:10px'><small style='color:#666'>عدد الدفعات</small><div style='font-size:14px'>4 دفعات</div></div></div><div style='background:white;border-radius:12px;padding:16px;margin-bottom:14px'><b style='font-size:14px;display:block;margin-bottom:10px'>الدفعة الواحدة</b><div style='display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid #eee'><span>الإيجار</span><span>11,250</span></div><div style='display:flex;justify-content:space-between;font-size:14px;padding:6px 0;border-bottom:1px solid #eee'><span>الضريبة</span><span>1,688</span></div><div style='display:flex;justify-content:space-between;font-size:14px;font-weight:bold;padding:8px 0 0'><span>الإجمالي</span><span>15,763</span></div></div><div style='background:#25d366;color:white;text-align:center;padding:14px;border-radius:10px;font-weight:600'>مشاركة الصورة عبر الواتساب</div></div>"
+      }
+    }
+  ]
+}

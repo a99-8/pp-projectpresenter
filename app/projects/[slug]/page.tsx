@@ -9,6 +9,7 @@ import {
   CheckCircle2,
   ExternalLink,
   Eye,
+  Globe,
   Lightbulb,
   Monitor,
   Network,
@@ -168,6 +169,17 @@ async function ProjectContent({ params }: { params: Promise<{ slug: string }> })
               >
                 <ExternalLink className="size-4" />
                 معاينة حية
+              </a>
+            )}
+            {project.websiteUrl && (
+              <a
+                href={project.websiteUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonVariants({ variant: "outline", size: "sm" })}
+              >
+                <Globe className="size-4" />
+                الموقع
               </a>
             )}
           </div>

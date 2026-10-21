@@ -53,6 +53,7 @@ export type Project = {
   source: SourceKind;
   repoUrl?: string;
   demoUrl?: string;
+  websiteUrl?: string;
   type: ProjectType;
   framework: { name: string; icon?: string };
   stack: string[];

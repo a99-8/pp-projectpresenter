@@ -122,6 +122,7 @@ function validateProject(raw: Record<string, unknown>, file: string): Project {
     source: source as Project["source"],
     repoUrl: raw.repoUrl as string | undefined,
     demoUrl: raw.demoUrl as string | undefined,
+    websiteUrl: raw.websiteUrl as string | undefined,
     type: type as Project["type"],
     framework: { name: framework.name!, icon: framework.icon },
     stack: needArray<string>(file, raw.stack ?? [], "stack"),
